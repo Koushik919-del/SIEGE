@@ -354,10 +354,10 @@ def product_card(product, col_key=""):
     if product.get("new"):
         new_badge = f'<span style="background:var(--accent);color:var(--charcoal);padding:2px 8px;font-size:0.7rem;font-weight:700;">NEW</span>'
 
-    price_html = f'<span style="font-size:1.1rem;font-weight:600;color:var(--charcoal);">£{product["price"]:.2f}</span>'
+    price_html = f'<span style="font-size:1.1rem;font-weight:600;color:var(--charcoal);">${product["price"]:.2f}</span>'
     if product.get("original_price"):
-        price_html = f'<span style="font-size:1.1rem;font-weight:600;color:var(--red);">£{product["price"]:.2f}</span> ' \
-                     f'<span style="text-decoration:line-through;color:var(--warm-gray);font-size:0.9rem;">£{product["original_price"]:.2f}</span>'
+        price_html = f'<span style="font-size:1.1rem;font-weight:600;color:var(--red);">${product["price"]:.2f}</span> ' \
+                     f'<span style="text-decoration:line-through;color:var(--warm-gray);font-size:0.9rem;">${product["original_price"]:.2f}</span>'
 
     wishlist_icon = "❤️" if product["id"] in st.session_state.wishlist else "🤍"
 
@@ -526,7 +526,7 @@ def page_home():
         <div style="flex:1;background:var(--card-bg);padding:2rem;text-align:center;">
             <div style="font-size:2rem;margin-bottom:0.5rem;">🚚</div>
             <div style="font-family:'Playfair Display',serif;font-weight:700;color:var(--charcoal);margin-bottom:0.3rem;">Free Shipping</div>
-            <div style="font-size:0.85rem;color:var(--warm-gray);">On orders over £200</div>
+            <div style="font-size:0.85rem;color:var(--warm-gray);">On orders over $200</div>
         </div>
         <div style="flex:1;background:var(--card-bg);padding:2rem;text-align:center;">
             <div style="font-size:2rem;margin-bottom:0.5rem;">↩️</div>
@@ -658,10 +658,10 @@ def page_product():
     with info_col:
         wishlist_icon = "❤️ In Wishlist" if product["id"] in st.session_state.wishlist else "🤍 Add to Wishlist"
 
-        price_html = f'<span style="font-size:2rem;font-weight:700;color:var(--charcoal);">£{product["price"]:.2f}</span>'
+        price_html = f'<span style="font-size:2rem;font-weight:700;color:var(--charcoal);">${product["price"]:.2f}</span>'
         if product.get("original_price"):
-            price_html = (f'<span style="font-size:2rem;font-weight:700;color:var(--red);">£{product["price"]:.2f}</span> '
-                          f'<span style="text-decoration:line-through;color:var(--warm-gray);font-size:1.2rem;">£{product["original_price"]:.2f}</span>')
+            price_html = (f'<span style="font-size:2rem;font-weight:700;color:var(--red);">${product["price"]:.2f}</span> '
+                          f'<span style="text-decoration:line-through;color:var(--warm-gray);font-size:1.2rem;">${product["original_price"]:.2f}</span>')
 
         st.markdown(f"""
         <div style="padding:1rem 0;">
@@ -710,7 +710,7 @@ def page_product():
         st.markdown("""
         <div style="margin-top:2rem;padding:1rem;background:var(--card-bg);border:1px solid var(--border);">
             <div style="font-size:0.8rem;color:var(--warm-gray);line-height:2;">
-                🚚 &nbsp;Free shipping on orders over £200<br>
+                🚚 &nbsp;Free shipping on orders over $200<br>
                 ↩️ &nbsp;Free 30-day returns<br>
                 🔒 &nbsp;Secure checkout<br>
                 🌿 &nbsp;Sustainably sourced materials
@@ -769,7 +769,7 @@ def page_cart():
                             Size: {item['size']} · Colour: {item['color']}
                         </div>
                         <div style="font-size:0.9rem;font-weight:600;color:var(--charcoal);margin-top:4px;">
-                            £{item['price']:.2f} × {item['qty']} = £{item['price'] * item['qty']:.2f}
+                            ${item['price']:.2f} × {item['qty']} = ${item['price'] * item['qty']:.2f}
                         </div>
                     </div>
                 </div>
@@ -805,20 +805,20 @@ def page_cart():
             </h3>
             <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;font-size:0.9rem;">
                 <span style="color:var(--warm-gray);">Subtotal</span>
-                <span style="font-weight:600;">£{subtotal:.2f}</span>
+                <span style="font-weight:600;">${subtotal:.2f}</span>
             </div>
             <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;font-size:0.9rem;">
                 <span style="color:var(--warm-gray);">Shipping</span>
                 <span style="font-weight:600;color:{'var(--accent)' if shipping == 0 else 'var(--charcoal)'}"">
-                    {'Free' if shipping == 0 else f'£{shipping:.2f}'}
+                    {'Free' if shipping == 0 else f'${shipping:.2f}'}
                 </span>
             </div>
-            {'<div style="font-size:0.75rem;color:var(--accent);margin-bottom:0.75rem;">✓ You qualify for free shipping!</div>' if shipping == 0 else f'<div style="font-size:0.75rem;color:var(--warm-gray);margin-bottom:0.75rem;">Add £{200 - subtotal:.2f} more for free shipping</div>'}
+            {'<div style="font-size:0.75rem;color:var(--accent);margin-bottom:0.75rem;">✓ You qualify for free shipping!</div>' if shipping == 0 else f'<div style="font-size:0.75rem;color:var(--warm-gray);margin-bottom:0.75rem;">Add ${200 - subtotal:.2f} more for free shipping</div>'}
             <hr style="border-color:var(--border);margin:0.75rem 0;">
             <div style="display:flex;justify-content:space-between;font-size:1.1rem;font-weight:700;
                         margin-bottom:1.5rem;">
                 <span>Total</span>
-                <span>£{total:.2f}</span>
+                <span>${total:.2f}</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -911,7 +911,7 @@ def page_checkout():
                 <div style="display:flex;justify-content:space-between;padding:0.5rem 0;
                             border-bottom:1px solid var(--border);font-size:0.9rem;">
                     <span>{item['emoji']} {item['name']} ({item['size']}, {item['color']}) × {item['qty']}</span>
-                    <span style="font-weight:600;">£{item['price'] * item['qty']:.2f}</span>
+                    <span style="font-weight:600;">${item['price'] * item['qty']:.2f}</span>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -934,15 +934,15 @@ def page_checkout():
         <div style="background:var(--card-bg);border:1px solid var(--border);padding:1.5rem;position:sticky;top:20px;">
             <h3 style="font-family:'Playfair Display',serif;color:var(--charcoal);margin:0 0 1rem;">Order Summary</h3>
             <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;font-size:0.88rem;">
-                <span style="color:var(--warm-gray);">Subtotal</span><span>£{subtotal:.2f}</span>
+                <span style="color:var(--warm-gray);">Subtotal</span><span>${subtotal:.2f}</span>
             </div>
             <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;font-size:0.88rem;">
                 <span style="color:var(--warm-gray);">Shipping</span>
-                <span>{'Free' if shipping == 0 else f'£{shipping:.2f}'}</span>
+                <span>{'Free' if shipping == 0 else f'${shipping:.2f}'}</span>
             </div>
             <hr style="border-color:var(--border);margin:0.75rem 0;">
             <div style="display:flex;justify-content:space-between;font-size:1.1rem;font-weight:700;">
-                <span>Total</span><span>£{total:.2f}</span>
+                <span>Total</span><span>${total:.2f}</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
