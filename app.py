@@ -1096,7 +1096,7 @@ def render_footer():
         <div style="display:flex;gap:4rem;margin-bottom:2rem;flex-wrap:wrap;">
             <div>
                 <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;
-                            color:var(--cream);margin-bottom:1rem;">VOGUE<span style="color:var(--accent);">THREAD</span></div>
+                            color:var(--cream);margin-bottom:1rem;">SIEGE<span style="color:var(--accent);">The Clothing Empire</span></div>
                 <div style="font-size:0.85rem;color:#666;max-width:220px;line-height:1.7;">
                     Thoughtfully made clothing.<br>Responsibly sourced. London-based.
                 </div>
