@@ -1008,7 +1008,7 @@ def page_about():
 
         <div style="background:var(--card-bg);border:1px solid var(--border);padding:3rem;margin-bottom:2rem;">
             <p style="font-size:1.1rem;line-height:1.9;color:var(--charcoal);margin:0;">
-                VOGUETHREAD began with a simple conviction: beautiful clothes shouldn't cost the earth —
+                SIEGE: The Clothing Empire began with a simple conviction: beautiful clothes shouldn't cost the earth —
                 financially or ecologically. Founded in East London in 2019 by two former fashion industry
                 insiders, we set out to prove that quality, sustainability, and accessible pricing could coexist
                 in a single wardrobe.
@@ -1081,10 +1081,10 @@ def page_contact():
             <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;
                         color:var(--charcoal);margin-bottom:1rem;">Other Ways to Reach Us</div>
             <div style="font-size:0.9rem;color:var(--warm-gray);line-height:2.2;">
-                📧 &nbsp;hello@voguethread.co.uk<br>
+                📧 &nbsp;hello@SIEGE: The Clothing Empire.co.uk<br>
                 📞 &nbsp;+44 20 1234 5678 (Mon–Fri, 9–5 GMT)<br>
                 📍 &nbsp;14 Curtain Road, London EC2A 3AT<br>
-                🐦 &nbsp;@voguethread
+                🐦 &nbsp;@SIEGE: The Clothing Empire
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1125,7 +1125,7 @@ def render_footer():
         </div>
         <hr style="border-color:#333;margin:1.5rem 0;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
-            <div style="font-size:0.75rem;color:#555;">© 2025 VOGUETHREAD. All rights reserved.</div>
+            <div style="font-size:0.75rem;color:#555;">© 2025 SIEGE: The Clothing Empire. All rights reserved.</div>
             <div style="font-size:0.75rem;color:#555;">Privacy Policy · Terms of Service · Cookie Policy</div>
         </div>
     </div>
