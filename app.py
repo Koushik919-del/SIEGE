@@ -465,7 +465,7 @@ def page_home():
             <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#aaa;">Avg Rating</div>
         </div>
         <div>
-            <div style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--accent);">Many+</div>
+            <div style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--accent);">Many</div>
             <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#aaa;">Reviews</div>
         </div>
         <div>
