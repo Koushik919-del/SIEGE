@@ -225,6 +225,23 @@ def init_state():
         if k not in st.session_state:
             st.session_state[k] = v
 
+    # Defensive type checks — Streamlit Cloud can deserialize state incorrectly
+    if not isinstance(st.session_state.cart, dict):
+        st.session_state.cart = {}
+    if not isinstance(st.session_state.wishlist, set):
+        try:
+            st.session_state.wishlist = set(st.session_state.wishlist)
+        except Exception:
+            st.session_state.wishlist = set()
+    if not isinstance(st.session_state.page, str):
+        st.session_state.page = "home"
+    if not isinstance(st.session_state.filter_category, str):
+        st.session_state.filter_category = "All"
+    if not isinstance(st.session_state.filter_sub, str):
+        st.session_state.filter_sub = "All"
+    if not isinstance(st.session_state.search_query, str):
+        st.session_state.search_query = ""
+
 init_state()
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -252,10 +269,18 @@ def add_to_cart(pid, size, color, qty=1):
     st.session_state.toast = f"✓  {next(p for p in PRODUCTS if p['id'] == pid)['name']} added to cart"
 
 def cart_count():
-    return sum(v["qty"] for v in st.session_state.cart.values())
+    try:
+        return sum(v["qty"] for v in st.session_state.cart.values() if isinstance(v, dict))
+    except Exception:
+        st.session_state.cart = {}
+        return 0
 
 def cart_total():
-    return sum(v["price"] * v["qty"] for v in st.session_state.cart.values())
+    try:
+        return sum(v["price"] * v["qty"] for v in st.session_state.cart.values() if isinstance(v, dict))
+    except Exception:
+        st.session_state.cart = {}
+        return 0
 
 def star_display(rating):
     full = int(rating)
