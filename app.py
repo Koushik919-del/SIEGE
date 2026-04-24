@@ -316,10 +316,10 @@ def render_navbar():
                 font-family:'DM Sans',sans-serif;letter-spacing:0.05em;">
         <div style="font-family:'Playfair Display',serif;font-size:1.5rem;
                     color:var(--cream);font-weight:900;letter-spacing:0.04em;">
-            SIEGE<span style="color:var(--accent);"> The Clothing Empire</span>
+            VOGUE<span style="color:var(--accent);">THREAD</span>
         </div>
         <div style="display:flex;gap:2rem;font-size:0.8rem;font-weight:500;text-transform:uppercase;color:#aaa;">
-            <span>Est. 2025</span>
+            <span>Est. 2019</span>
             <span>Free shipping over $200</span>
         </div>
         <div style="color:var(--accent-light);font-size:0.85rem;font-weight:500;">
@@ -354,10 +354,10 @@ def product_card(product, col_key=""):
     if product.get("new"):
         new_badge = f'<span style="background:var(--accent);color:var(--charcoal);padding:2px 8px;font-size:0.7rem;font-weight:700;">NEW</span>'
 
-    price_html = f'<span style="font-size:1.1rem;font-weight:600;color:var(--charcoal);">${product["price"]:.2f}</span>'
+    price_html = f'<span style="font-size:1.1rem;font-weight:600;color:var(--charcoal);">£{product["price"]:.2f}</span>'
     if product.get("original_price"):
-        price_html = f'<span style="font-size:1.1rem;font-weight:600;color:var(--red);">${product["price"]:.2f}</span> ' \
-                     f'<span style="text-decoration:line-through;color:var(--warm-gray);font-size:0.9rem;">${product["original_price"]:.2f}</span>'
+        price_html = f'<span style="font-size:1.1rem;font-weight:600;color:var(--red);">£{product["price"]:.2f}</span> ' \
+                     f'<span style="text-decoration:line-through;color:var(--warm-gray);font-size:0.9rem;">£{product["original_price"]:.2f}</span>'
 
     wishlist_icon = "❤️" if product["id"] in st.session_state.wishlist else "🤍"
 
@@ -416,11 +416,11 @@ def page_home():
         <div style="max-width:600px;z-index:1;">
             <div style="font-size:0.8rem;letter-spacing:0.25em;text-transform:uppercase;
                         color:var(--accent);margin-bottom:1.5rem;font-family:'DM Sans',sans-serif;">
-                Spring 2026 Collection
+                Spring / Summer 2025 Collection
             </div>
             <h1 style="font-family:'Playfair Display',serif;font-size:4rem;color:var(--cream);
                        line-height:1.05;margin:0 0 1.5rem;font-weight:900;">
-                Made with Luxury<br><em style="color:var(--accent-light);">Luxuriate Your Life</em>
+                Dressed for<br><em style="color:var(--accent-light);">Every Story</em>
             </h1>
             <p style="color:#aaa;font-size:1.05rem;line-height:1.7;margin-bottom:2rem;
                       font-family:'DM Sans',sans-serif;max-width:440px;">
@@ -465,7 +465,7 @@ def page_home():
             <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#aaa;">Avg Rating</div>
         </div>
         <div>
-            <div style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--accent);">Many</div>
+            <div style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--accent);">2,400+</div>
             <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#aaa;">Reviews</div>
         </div>
         <div>
@@ -526,7 +526,7 @@ def page_home():
         <div style="flex:1;background:var(--card-bg);padding:2rem;text-align:center;">
             <div style="font-size:2rem;margin-bottom:0.5rem;">🚚</div>
             <div style="font-family:'Playfair Display',serif;font-weight:700;color:var(--charcoal);margin-bottom:0.3rem;">Free Shipping</div>
-            <div style="font-size:0.85rem;color:var(--warm-gray);">On orders over $200</div>
+            <div style="font-size:0.85rem;color:var(--warm-gray);">On orders over £200</div>
         </div>
         <div style="flex:1;background:var(--card-bg);padding:2rem;text-align:center;">
             <div style="font-size:2rem;margin-bottom:0.5rem;">↩️</div>
@@ -658,10 +658,10 @@ def page_product():
     with info_col:
         wishlist_icon = "❤️ In Wishlist" if product["id"] in st.session_state.wishlist else "🤍 Add to Wishlist"
 
-        price_html = f'<span style="font-size:2rem;font-weight:700;color:var(--charcoal);">${product["price"]:.2f}</span>'
+        price_html = f'<span style="font-size:2rem;font-weight:700;color:var(--charcoal);">£{product["price"]:.2f}</span>'
         if product.get("original_price"):
-            price_html = (f'<span style="font-size:2rem;font-weight:700;color:var(--red);">${product["price"]:.2f}</span> '
-                          f'<span style="text-decoration:line-through;color:var(--warm-gray);font-size:1.2rem;">${product["original_price"]:.2f}</span>')
+            price_html = (f'<span style="font-size:2rem;font-weight:700;color:var(--red);">£{product["price"]:.2f}</span> '
+                          f'<span style="text-decoration:line-through;color:var(--warm-gray);font-size:1.2rem;">£{product["original_price"]:.2f}</span>')
 
         st.markdown(f"""
         <div style="padding:1rem 0;">
@@ -710,7 +710,7 @@ def page_product():
         st.markdown("""
         <div style="margin-top:2rem;padding:1rem;background:var(--card-bg);border:1px solid var(--border);">
             <div style="font-size:0.8rem;color:var(--warm-gray);line-height:2;">
-                🚚 &nbsp;Free shipping on orders over $200<br>
+                🚚 &nbsp;Free shipping on orders over £200<br>
                 ↩️ &nbsp;Free 30-day returns<br>
                 🔒 &nbsp;Secure checkout<br>
                 🌿 &nbsp;Sustainably sourced materials
@@ -769,7 +769,7 @@ def page_cart():
                             Size: {item['size']} · Colour: {item['color']}
                         </div>
                         <div style="font-size:0.9rem;font-weight:600;color:var(--charcoal);margin-top:4px;">
-                            ${item['price']:.2f} × {item['qty']} = ${item['price'] * item['qty']:.2f}
+                            £{item['price']:.2f} × {item['qty']} = £{item['price'] * item['qty']:.2f}
                         </div>
                     </div>
                 </div>
@@ -805,20 +805,20 @@ def page_cart():
             </h3>
             <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;font-size:0.9rem;">
                 <span style="color:var(--warm-gray);">Subtotal</span>
-                <span style="font-weight:600;">${subtotal:.2f}</span>
+                <span style="font-weight:600;">£{subtotal:.2f}</span>
             </div>
             <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;font-size:0.9rem;">
                 <span style="color:var(--warm-gray);">Shipping</span>
                 <span style="font-weight:600;color:{'var(--accent)' if shipping == 0 else 'var(--charcoal)'}"">
-                    {'Free' if shipping == 0 else f'${shipping:.2f}'}
+                    {'Free' if shipping == 0 else f'£{shipping:.2f}'}
                 </span>
             </div>
-            {'<div style="font-size:0.75rem;color:var(--accent);margin-bottom:0.75rem;">✓ You qualify for free shipping!</div>' if shipping == 0 else f'<div style="font-size:0.75rem;color:var(--warm-gray);margin-bottom:0.75rem;">Add ${200 - subtotal:.2f} more for free shipping</div>'}
+            {'<div style="font-size:0.75rem;color:var(--accent);margin-bottom:0.75rem;">✓ You qualify for free shipping!</div>' if shipping == 0 else f'<div style="font-size:0.75rem;color:var(--warm-gray);margin-bottom:0.75rem;">Add £{200 - subtotal:.2f} more for free shipping</div>'}
             <hr style="border-color:var(--border);margin:0.75rem 0;">
             <div style="display:flex;justify-content:space-between;font-size:1.1rem;font-weight:700;
                         margin-bottom:1.5rem;">
                 <span>Total</span>
-                <span>${total:.2f}</span>
+                <span>£{total:.2f}</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -911,7 +911,7 @@ def page_checkout():
                 <div style="display:flex;justify-content:space-between;padding:0.5rem 0;
                             border-bottom:1px solid var(--border);font-size:0.9rem;">
                     <span>{item['emoji']} {item['name']} ({item['size']}, {item['color']}) × {item['qty']}</span>
-                    <span style="font-weight:600;">${item['price'] * item['qty']:.2f}</span>
+                    <span style="font-weight:600;">£{item['price'] * item['qty']:.2f}</span>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -934,15 +934,15 @@ def page_checkout():
         <div style="background:var(--card-bg);border:1px solid var(--border);padding:1.5rem;position:sticky;top:20px;">
             <h3 style="font-family:'Playfair Display',serif;color:var(--charcoal);margin:0 0 1rem;">Order Summary</h3>
             <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;font-size:0.88rem;">
-                <span style="color:var(--warm-gray);">Subtotal</span><span>${subtotal:.2f}</span>
+                <span style="color:var(--warm-gray);">Subtotal</span><span>£{subtotal:.2f}</span>
             </div>
             <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;font-size:0.88rem;">
                 <span style="color:var(--warm-gray);">Shipping</span>
-                <span>{'Free' if shipping == 0 else f'${shipping:.2f}'}</span>
+                <span>{'Free' if shipping == 0 else f'£{shipping:.2f}'}</span>
             </div>
             <hr style="border-color:var(--border);margin:0.75rem 0;">
             <div style="display:flex;justify-content:space-between;font-size:1.1rem;font-weight:700;">
-                <span>Total</span><span>${total:.2f}</span>
+                <span>Total</span><span>£{total:.2f}</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1008,7 +1008,7 @@ def page_about():
 
         <div style="background:var(--card-bg);border:1px solid var(--border);padding:3rem;margin-bottom:2rem;">
             <p style="font-size:1.1rem;line-height:1.9;color:var(--charcoal);margin:0;">
-                SIEGE: The Clothing Empire began with a simple conviction: beautiful clothes shouldn't cost the earth —
+                VOGUETHREAD began with a simple conviction: beautiful clothes shouldn't cost the earth —
                 financially or ecologically. Founded in East London in 2019 by two former fashion industry
                 insiders, we set out to prove that quality, sustainability, and accessible pricing could coexist
                 in a single wardrobe.
@@ -1081,10 +1081,10 @@ def page_contact():
             <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;
                         color:var(--charcoal);margin-bottom:1rem;">Other Ways to Reach Us</div>
             <div style="font-size:0.9rem;color:var(--warm-gray);line-height:2.2;">
-                📧 &nbsp;hello@SIEGE: The Clothing Empire.co.uk<br>
+                📧 &nbsp;hello@voguethread.co.uk<br>
                 📞 &nbsp;+44 20 1234 5678 (Mon–Fri, 9–5 GMT)<br>
                 📍 &nbsp;14 Curtain Road, London EC2A 3AT<br>
-                🐦 &nbsp;@SIEGE: The Clothing Empire
+                🐦 &nbsp;@voguethread
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1096,7 +1096,7 @@ def render_footer():
         <div style="display:flex;gap:4rem;margin-bottom:2rem;flex-wrap:wrap;">
             <div>
                 <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;
-                            color:var(--cream);margin-bottom:1rem;">SIEGE<span style="color:var(--accent);">The Clothing Empire</span></div>
+                            color:var(--cream);margin-bottom:1rem;">VOGUE<span style="color:var(--accent);">THREAD</span></div>
                 <div style="font-size:0.85rem;color:#666;max-width:220px;line-height:1.7;">
                     Thoughtfully made clothing.<br>Responsibly sourced. London-based.
                 </div>
@@ -1125,7 +1125,7 @@ def render_footer():
         </div>
         <hr style="border-color:#333;margin:1.5rem 0;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
-            <div style="font-size:0.75rem;color:#555;">© 2025 SIEGE: The Clothing Empire. All rights reserved.</div>
+            <div style="font-size:0.75rem;color:#555;">© 2025 VOGUETHREAD. All rights reserved.</div>
             <div style="font-size:0.75rem;color:#555;">Privacy Policy · Terms of Service · Cookie Policy</div>
         </div>
     </div>
@@ -1156,5 +1156,224 @@ elif page == "contact":
     page_contact()
 else:
     page_home()
+
+# ── MrBunny AI Chat Widget ─────────────────────────────────────────────────────
+if "bunny_open" not in st.session_state:
+    st.session_state.bunny_open = False
+if "bunny_messages" not in st.session_state:
+    st.session_state.bunny_messages = []
+
+# Floating black circle button (cosmetic — always shown via HTML)
+st.markdown("""
+<style>
+#bunny-fab {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 58px;
+    height: 58px;
+    background: #0d0d0d;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.65rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    z-index: 99999;
+    border: 2px solid #2a2a2a;
+    user-select: none;
+    cursor: pointer;
+    transition: transform 0.18s, box-shadow 0.18s;
+}
+#bunny-fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(0,0,0,0.65); }
+
+/* Hide the real Streamlit toggle button visually but keep it clickable via JS */
+div[data-testid="column"]:has(button[kind="secondary"]#bunny-toggle-btn) {
+    position: fixed !important;
+    bottom: 28px !important;
+    right: 28px !important;
+    width: 58px !important;
+    height: 58px !important;
+    z-index: 100000 !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+}
+div[data-testid="column"]:has(button[kind="secondary"]#bunny-toggle-btn) button {
+    width: 58px !important;
+    height: 58px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+}
+</style>
+<div id="bunny-fab">🐰</div>
+""", unsafe_allow_html=True)
+
+# Invisible toggle columns trick
+_b1, _b2 = st.columns([99, 1])
+with _b2:
+    if st.button("🐰", key="bunny-toggle-btn"):
+        st.session_state.bunny_open = not st.session_state.bunny_open
+        st.rerun()
+
+# ── Chat panel ─────────────────────────────────────────────────────────────────
+if st.session_state.bunny_open:
+    st.markdown("""
+    <style>
+    .bunny-panel {
+        position: fixed;
+        bottom: 100px;
+        right: 28px;
+        width: 340px;
+        max-height: 480px;
+        background: #0d0d0d;
+        border-radius: 4px;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.75);
+        z-index: 99998;
+        display: flex;
+        flex-direction: column;
+        font-family: 'DM Sans', sans-serif;
+        border: 1px solid #222;
+        overflow: hidden;
+    }
+    .bunny-header {
+        background: #111;
+        padding: 13px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px solid #1e1e1e;
+        flex-shrink: 0;
+    }
+    .bunny-avatar {
+        width: 34px; height: 34px;
+        background: #1a1a1a;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.15rem;
+        border: 1px solid #2e2e2e;
+        flex-shrink: 0;
+    }
+    .bunny-title  { color: #f0f0f0; font-weight: 700; font-size: 0.93rem; letter-spacing:0.02em; }
+    .bunny-sub    { color: #484848; font-size: 0.7rem; margin-top: 1px; }
+    .bunny-dot    { width:7px;height:7px;background:#3ecf8e;border-radius:50%;margin-left:auto;flex-shrink:0; }
+    .bunny-msgs   {
+        flex: 1;
+        overflow-y: auto;
+        padding: 14px 13px 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-height: 0;
+    }
+    .bunny-msgs::-webkit-scrollbar { width: 3px; }
+    .bunny-msgs::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
+    .msg-row-bot  { display:flex; flex-direction:column; align-items:flex-start; }
+    .msg-row-user { display:flex; flex-direction:column; align-items:flex-end; }
+    .msg-lbl      { font-size:0.62rem; color:#3a3a3a; margin-bottom:3px; }
+    .msg-bot {
+        background: #161616;
+        color: #ccc;
+        border-radius: 2px 10px 10px 10px;
+        padding: 8px 12px;
+        font-size: 0.82rem;
+        line-height: 1.55;
+        max-width: 90%;
+        border: 1px solid #1f1f1f;
+    }
+    .msg-usr {
+        background: #C4973B;
+        color: #0d0d0d;
+        border-radius: 10px 2px 10px 10px;
+        padding: 8px 12px;
+        font-size: 0.82rem;
+        line-height: 1.55;
+        max-width: 90%;
+        font-weight: 600;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # Build messages HTML
+    if not st.session_state.bunny_messages:
+        msgs_html = """
+        <div class="msg-row-bot">
+            <div class="msg-lbl">MrBunny</div>
+            <div class="msg-bot">Hey! 🐰 I'm MrBunny, your SIEGE style assistant. Ask me about sizing, styling tips, what's new, or help finding the perfect piece!</div>
+        </div>"""
+    else:
+        msgs_html = ""
+        for m in st.session_state.bunny_messages:
+            if m["role"] == "assistant":
+                msgs_html += f'<div class="msg-row-bot"><div class="msg-lbl">MrBunny</div><div class="msg-bot">{m["content"]}</div></div>'
+            else:
+                msgs_html += f'<div class="msg-row-user"><div class="msg-lbl">You</div><div class="msg-usr">{m["content"]}</div></div>'
+
+    st.markdown(f"""
+    <div class="bunny-panel">
+        <div class="bunny-header">
+            <div class="bunny-avatar">🐰</div>
+            <div>
+                <div class="bunny-title">MrBunny AI</div>
+                <div class="bunny-sub">SIEGE Style Assistant</div>
+            </div>
+            <div class="bunny-dot"></div>
+        </div>
+        <div class="bunny-msgs" id="bmbox">{msgs_html}</div>
+    </div>
+    <script>var b=document.getElementById('bmbox');if(b)b.scrollTop=b.scrollHeight;</script>
+    """, unsafe_allow_html=True)
+
+    # Input row sits below the fixed panel — push it down visually
+    st.markdown("<div style='height:390px'></div>", unsafe_allow_html=True)
+
+    inp_c, btn_c = st.columns([6, 1])
+    with inp_c:
+        user_msg = st.text_input("bunny_msg", placeholder="Ask MrBunny anything…",
+                                  label_visibility="collapsed", key="bunny_field")
+    with btn_c:
+        send = st.button("➤", key="bunny_send")
+
+    if send and st.session_state.get("bunny_field", "").strip():
+        user_text = st.session_state["bunny_field"].strip()
+        st.session_state.bunny_messages.append({"role": "user", "content": user_text})
+
+        product_catalogue = "\n".join(
+            f"- {p['name']} ({p['category']}, {p['subcategory']}) — ${p['price']:.2f}"
+            + (" [ON SALE]" if p.get("sale") else "")
+            + (" [NEW]" if p.get("new") else "")
+            for p in PRODUCTS
+        )
+        system_prompt = f"""You are MrBunny 🐰, a charming and knowledgeable AI fashion assistant for SIEGE: The Clothing Empire — a premium clothing brand.
+Help customers with styling advice, sizing, product recommendations, and fashion guidance.
+Be warm, witty, and concise (2–4 sentences unless more is needed). Use a bunny emoji occasionally.
+Never invent products — only refer to the catalogue below.
+
+Product catalogue:
+{product_catalogue}
+
+Sizing: all pieces run true to size unless noted. Free shipping over $200. Free 30-day returns."""
+
+        try:
+            import urllib.request as _ur, json as _j
+            _payload = _j.dumps({
+                "model": "claude-sonnet-4-20250514",
+                "max_tokens": 1000,
+                "system": system_prompt,
+                "messages": st.session_state.bunny_messages,
+            }).encode()
+            _req = _ur.Request(
+                "https://api.anthropic.com/v1/messages",
+                data=_payload,
+                headers={"Content-Type": "application/json"},
+                method="POST"
+            )
+            with _ur.urlopen(_req, timeout=25) as _resp:
+                _data = _j.loads(_resp.read())
+            reply = _data["content"][0]["text"]
+        except Exception as _e:
+            reply = f"Oops, I tripped over my fluffy feet! 🐰 Give me a second and try again. ({type(_e).__name__})"
+
+        st.session_state.bunny_messages.append({"role": "assistant", "content": reply})
+        st.rerun()
 
 render_footer()
