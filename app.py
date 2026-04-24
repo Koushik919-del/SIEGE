@@ -1157,238 +1157,295 @@ elif page == "contact":
 else:
     page_home()
 
-# ── MrBunny AI Chat Widget ─────────────────────────────────────────────────────
-if "bunny_open" not in st.session_state:
-    st.session_state.bunny_open = False
-if "bunny_messages" not in st.session_state:
-    st.session_state.bunny_messages = []
 
-# Style: fix the real Streamlit button to look like a floating circle
-st.markdown("""
+# ── MrBunny AI Chat Widget (self-contained iframe) ────────────────────────────
+import streamlit.components.v1 as _components
+
+_product_list = "\n".join(
+    f"- {p['name']} ({p['category']}, {p['subcategory']}) — ${p['price']:.2f}"
+    + (" [ON SALE]" if p.get("sale") else "")
+    + (" [NEW]" if p.get("new") else "")
+    for p in PRODUCTS
+)
+
+_BUNNY_HTML = """
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
 <style>
-/* Target the bunny toggle button's parent stVerticalBlock and position it fixed */
-div[data-testid="stVerticalBlock"]:has(> div > div > button[kind="secondary"]:nth-of-type(1)#bunny_fab_btn) {
-    position: fixed !important;
-}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: transparent; font-family: 'DM Sans', sans-serif; overflow: hidden; }
 
-/* Make the bunny button look like a floating circle */
-button[data-testid="baseButton-secondary"][kind="secondary"]#bunny_fab_btn {
-    position: fixed !important;
-    bottom: 28px !important;
-    right: 28px !important;
-}
-
-/* The actual working approach: style by aria-label */
-[aria-label="🐰 MrBunny"] {
-    position: fixed !important;
-    bottom: 28px !important;
-    right: 28px !important;
-    width: 58px !important;
-    height: 58px !important;
-    min-height: 58px !important;
-    border-radius: 50% !important;
-    background: #0d0d0d !important;
-    border: 2px solid #333 !important;
-    font-size: 1.5rem !important;
-    padding: 0 !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.55) !important;
-    z-index: 999999 !important;
-    color: white !important;
-    letter-spacing: 0 !important;
-    text-transform: none !important;
-}
-[aria-label="🐰 MrBunny"]:hover {
-    transform: scale(1.1) !important;
-    background: #1a1a1a !important;
-}
-
-/* Chat panel styling */
-.bunny-panel {
+  /* FAB */
+  #fab {
     position: fixed;
-    bottom: 100px;
-    right: 28px;
-    width: 340px;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
     background: #0d0d0d;
-    border-radius: 4px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.8);
-    z-index: 99998;
-    font-family: 'DM Sans', sans-serif;
-    border: 1px solid #222;
+    border-radius: 50%;
+    border: 2px solid #333;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: transform 0.15s, box-shadow 0.15s;
+    user-select: none;
+  }
+  #fab:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(0,0,0,0.75); }
+
+  /* Panel */
+  #panel {
+    position: fixed;
+    bottom: 92px;
+    right: 24px;
+    width: 320px;
+    height: 420px;
+    background: #0d0d0d;
+    border: 1px solid #1f1f1f;
+    border-radius: 6px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.85);
+    display: none;
+    flex-direction: column;
+    z-index: 9998;
     overflow: hidden;
-}
-.bunny-header {
+  }
+  #panel.open { display: flex; }
+
+  /* Header */
+  #header {
     background: #111;
-    padding: 13px 16px;
+    padding: 12px 14px;
     display: flex;
     align-items: center;
     gap: 10px;
     border-bottom: 1px solid #1e1e1e;
-}
-.bunny-avatar {
-    width: 34px; height: 34px;
+    flex-shrink: 0;
+  }
+  #avatar {
+    width: 32px; height: 32px;
     background: #1a1a1a;
     border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.1rem;
     border: 1px solid #2e2e2e;
-    flex-shrink: 0;
-}
-.bunny-title { color: #f0f0f0; font-weight: 700; font-size: 0.93rem; }
-.bunny-sub   { color: #484848; font-size: 0.68rem; margin-top: 1px; }
-.bunny-dot   { width:7px;height:7px;background:#3ecf8e;border-radius:50%;margin-left:auto; }
-.bunny-msgs  {
-    height: 270px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  #htext { flex: 1; }
+  #htitle { color: #f0f0f0; font-weight: 700; font-size: 0.88rem; }
+  #hsub   { color: #444; font-size: 0.65rem; margin-top: 1px; }
+  #hdot   { width: 7px; height: 7px; background: #3ecf8e; border-radius: 50%; }
+
+  /* Messages */
+  #messages {
+    flex: 1;
     overflow-y: auto;
-    padding: 12px;
+    padding: 12px 10px;
     display: flex;
     flex-direction: column;
     gap: 8px;
     background: #0d0d0d;
-}
-.bunny-msgs::-webkit-scrollbar { width: 3px; }
-.bunny-msgs::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
-.msg-bot {
+  }
+  #messages::-webkit-scrollbar { width: 3px; }
+  #messages::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
+
+  .msg-wrap-bot  { display:flex; flex-direction:column; align-items:flex-start; }
+  .msg-wrap-user { display:flex; flex-direction:column; align-items:flex-end; }
+  .lbl { font-size: 0.6rem; color: #333; margin-bottom: 2px; }
+  .lbl-user { color: #7a6020; }
+
+  .bubble-bot {
     background: #161616;
     color: #ccc;
-    border-radius: 2px 10px 10px 10px;
-    padding: 8px 12px;
-    font-size: 0.82rem;
-    line-height: 1.55;
-    max-width: 90%;
-    align-self: flex-start;
     border: 1px solid #1f1f1f;
-}
-.msg-usr {
+    border-radius: 2px 10px 10px 10px;
+    padding: 8px 11px;
+    font-size: 0.8rem;
+    line-height: 1.55;
+    max-width: 92%;
+  }
+  .bubble-user {
     background: #C4973B;
     color: #0d0d0d;
     border-radius: 10px 2px 10px 10px;
-    padding: 8px 12px;
-    font-size: 0.82rem;
+    padding: 8px 11px;
+    font-size: 0.8rem;
     line-height: 1.55;
-    max-width: 90%;
-    align-self: flex-end;
+    max-width: 92%;
     font-weight: 600;
-}
-.msg-lbl-bot  { font-size:0.6rem; color:#333; margin-bottom:2px; align-self:flex-start; }
-.msg-lbl-user { font-size:0.6rem; color:#7a6020; margin-bottom:2px; align-self:flex-end; }
+  }
+  .typing {
+    color: #3a3a3a;
+    font-size: 0.75rem;
+    font-style: italic;
+    padding: 4px 2px;
+  }
+
+  /* Input bar */
+  #inputbar {
+    display: flex;
+    border-top: 1px solid #1a1a1a;
+    background: #111;
+    flex-shrink: 0;
+  }
+  #inputbar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ddd;
+    font-size: 0.82rem;
+    padding: 11px 12px;
+    font-family: inherit;
+  }
+  #inputbar input::placeholder { color: #3a3a3a; }
+  #sendbtn {
+    background: #C4973B;
+    border: none;
+    color: #0d0d0d;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  #sendbtn:hover { background: #d4a84b; }
+  #sendbtn:disabled { background: #333; color: #555; cursor: not-allowed; }
 </style>
-""", unsafe_allow_html=True)
+</head>
+<body>
 
-# The real clickable button — styled as a fixed circle via CSS above
-if st.button("🐰", key="bunny_fab", help="Chat with MrBunny AI"):
-    st.session_state.bunny_open = not st.session_state.bunny_open
-    st.rerun()
+<div id="fab" onclick="togglePanel()">🐰</div>
 
-# Inject JS to move the button to fixed position after render
-st.markdown("""
-<script>
-(function() {
-    function fixBunny() {
-        var btns = window.parent.document.querySelectorAll('button');
-        for (var b of btns) {
-            if (b.innerText.trim() === '🐰') {
-                b.style.cssText = [
-                    'position:fixed','bottom:28px','right:28px',
-                    'width:58px','height:58px','min-height:58px',
-                    'border-radius:50%','background:#0d0d0d',
-                    'border:2px solid #333','font-size:1.5rem',
-                    'padding:0','box-shadow:0 4px 20px rgba(0,0,0,.55)',
-                    'z-index:999999','color:white','letter-spacing:0',
-                    'text-transform:none','cursor:pointer',
-                    'display:flex','align-items:center','justify-content:center'
-                ].join('!important;') + '!important';
-                break;
-            }
-        }
-    }
-    fixBunny();
-    setTimeout(fixBunny, 300);
-    setTimeout(fixBunny, 800);
-})();
-</script>
-""", unsafe_allow_html=True)
-
-if st.session_state.bunny_open:
-    # Build message HTML
-    if not st.session_state.bunny_messages:
-        msgs_html = '<div class="msg-lbl-bot">MrBunny</div><div class="msg-bot">Hey! 🐰 I\'m MrBunny, your SIEGE style assistant. Ask me about sizing, styling tips, what\'s new, or finding the perfect piece!</div>'
-    else:
-        msgs_html = ""
-        for m in st.session_state.bunny_messages:
-            if m["role"] == "assistant":
-                msgs_html += f'<div class="msg-lbl-bot">MrBunny</div><div class="msg-bot">{m["content"]}</div>'
-            else:
-                msgs_html += f'<div class="msg-lbl-user">You</div><div class="msg-usr">{m["content"]}</div>'
-
-    st.markdown(f"""
-    <div class="bunny-panel">
-        <div class="bunny-header">
-            <div class="bunny-avatar">🐰</div>
-            <div>
-                <div class="bunny-title">MrBunny AI</div>
-                <div class="bunny-sub">SIEGE Style Assistant</div>
-            </div>
-            <div class="bunny-dot"></div>
-        </div>
-        <div class="bunny-msgs" id="bmbox">{msgs_html}</div>
+<div id="panel">
+  <div id="header">
+    <div id="avatar">🐰</div>
+    <div id="htext">
+      <div id="htitle">MrBunny AI</div>
+      <div id="hsub">SIEGE Style Assistant</div>
     </div>
-    <script>
-        setTimeout(function(){{
-            var b=window.parent.document.getElementById('bmbox');
-            if(b) b.scrollTop=b.scrollHeight;
-        }}, 100);
-    </script>
-    <div style="height: 390px;"></div>
-    """, unsafe_allow_html=True)
+    <div id="hdot"></div>
+  </div>
+  <div id="messages">
+    <div class="msg-wrap-bot">
+      <div class="lbl">MrBunny</div>
+      <div class="bubble-bot">Hey! 🐰 I'm MrBunny, your SIEGE style assistant. Ask me anything — sizing, styling tips, what's new, or help finding the perfect piece!</div>
+    </div>
+  </div>
+  <div id="inputbar">
+    <input id="inp" type="text" placeholder="Ask MrBunny anything…" onkeydown="if(event.key==='Enter')send()">
+    <button id="sendbtn" onclick="send()">➤</button>
+  </div>
+</div>
 
-    ic, bc = st.columns([6, 1])
-    with ic:
-        user_msg = st.text_input("Ask MrBunny…", placeholder="e.g. What jeans do you have?",
-                                  label_visibility="collapsed", key="bunny_field")
-    with bc:
-        send = st.button("➤", key="bunny_send")
+<script>
+const SYSTEM = `You are MrBunny 🐰, a charming AI fashion assistant for SIEGE: The Clothing Empire.
+Help with styling advice, sizing, product recommendations, and fashion guidance.
+Be warm, witty, concise (2-4 sentences). Use a bunny emoji occasionally.
+Only refer to products in this catalogue, never invent new ones:
 
-    if send and st.session_state.get("bunny_field", "").strip():
-        user_text = st.session_state["bunny_field"].strip()
-        st.session_state.bunny_messages.append({"role": "user", "content": user_text})
+CATALOGUE_PLACEHOLDER
 
-        product_catalogue = "\n".join(
-            f"- {p['name']} ({p['category']}, {p['subcategory']}) — ${p['price']:.2f}"
-            + (" [ON SALE]" if p.get("sale") else "")
-            + (" [NEW]" if p.get("new") else "")
-            for p in PRODUCTS
-        )
-        system_prompt = f"""You are MrBunny 🐰, a charming and knowledgeable AI fashion assistant for SIEGE: The Clothing Empire — a premium clothing brand.
-Help customers with styling advice, sizing, product recommendations, and fashion guidance.
-Be warm, witty, and concise (2-4 sentences unless more detail is needed). Use a bunny emoji occasionally.
-Never invent products — only refer to the catalogue below.
+Sizing: all pieces run true to size. Free shipping over $200. Free 30-day returns.`;
 
-Product catalogue:
-{product_catalogue}
+const history = [];
 
-Sizing: all pieces run true to size unless noted. Free shipping over $200. Free 30-day returns."""
+function togglePanel() {
+  const p = document.getElementById('panel');
+  p.classList.toggle('open');
+  if (p.classList.contains('open')) {
+    document.getElementById('inp').focus();
+  }
+}
 
-        try:
-            import urllib.request as _ur, json as _j
-            _payload = _j.dumps({
-                "model": "claude-sonnet-4-20250514",
-                "max_tokens": 1000,
-                "system": system_prompt,
-                "messages": st.session_state.bunny_messages,
-            }).encode()
-            _req = _ur.Request(
-                "https://api.anthropic.com/v1/messages",
-                data=_payload,
-                headers={"Content-Type": "application/json"},
-                method="POST"
-            )
-            with _ur.urlopen(_req, timeout=25) as _resp:
-                _data = _j.loads(_resp.read())
-            reply = _data["content"][0]["text"]
-        except Exception as _e:
-            reply = f"Oops, I tripped over my fluffy feet! 🐰 Try again in a moment. ({type(_e).__name__})"
+function scrollBottom() {
+  const m = document.getElementById('messages');
+  m.scrollTop = m.scrollHeight;
+}
 
-        st.session_state.bunny_messages.append({"role": "assistant", "content": reply})
-        st.rerun()
+function addBubble(role, text) {
+  const m = document.getElementById('messages');
+  const wrap = document.createElement('div');
+  wrap.className = role === 'user' ? 'msg-wrap-user' : 'msg-wrap-bot';
+  const lbl = document.createElement('div');
+  lbl.className = role === 'user' ? 'lbl lbl-user' : 'lbl';
+  lbl.textContent = role === 'user' ? 'You' : 'MrBunny';
+  const bubble = document.createElement('div');
+  bubble.className = role === 'user' ? 'bubble-user' : 'bubble-bot';
+  bubble.textContent = text;
+  wrap.appendChild(lbl);
+  wrap.appendChild(bubble);
+  m.appendChild(wrap);
+  scrollBottom();
+  return bubble;
+}
+
+function addTyping() {
+  const m = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.className = 'typing';
+  el.id = 'typing';
+  el.textContent = 'MrBunny is thinking…';
+  m.appendChild(el);
+  scrollBottom();
+}
+
+function removeTyping() {
+  const el = document.getElementById('typing');
+  if (el) el.remove();
+}
+
+async function send() {
+  const inp = document.getElementById('inp');
+  const btn = document.getElementById('sendbtn');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  inp.disabled = true;
+  btn.disabled = true;
+
+  addBubble('user', text);
+  history.push({ role: 'user', content: text });
+  addTyping();
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM,
+        messages: history
+      })
+    });
+    const data = await res.json();
+    removeTyping();
+    const reply = data.content && data.content[0] ? data.content[0].text : 'Something went wrong 🐰 Try again!';
+    addBubble('assistant', reply);
+    history.push({ role: 'assistant', content: reply });
+  } catch(e) {
+    removeTyping();
+    addBubble('assistant', 'Oops, I tripped over my fluffy feet! 🐰 Check your connection and try again.');
+  }
+
+  inp.disabled = false;
+  btn.disabled = false;
+  inp.focus();
+}
+</script>
+</body>
+</html>
+"""
+
+# Inject the product catalogue into the JS system prompt
+_BUNNY_HTML = _BUNNY_HTML.replace("CATALOGUE_PLACEHOLDER", _product_list)
+
+_components.html(_BUNNY_HTML, height=520, scrolling=False)
 
 render_footer()
