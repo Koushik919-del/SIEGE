@@ -420,7 +420,7 @@ def page_home():
             </div>
             <h1 style="font-family:'Playfair Display',serif;font-size:4rem;color:var(--cream);
                        line-height:1.05;margin:0 0 1.5rem;font-weight:900;">
-                Made with Luxury<br><em style="color:var(--accent-light);">Luxuriate Uour Life</em>
+                Made with Luxury<br><em style="color:var(--accent-light);">Luxuriate Your Life</em>
             </h1>
             <p style="color:#aaa;font-size:1.05rem;line-height:1.7;margin-bottom:2rem;
                       font-family:'DM Sans',sans-serif;max-width:440px;">
