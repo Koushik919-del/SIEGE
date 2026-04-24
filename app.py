@@ -416,11 +416,11 @@ def page_home():
         <div style="max-width:600px;z-index:1;">
             <div style="font-size:0.8rem;letter-spacing:0.25em;text-transform:uppercase;
                         color:var(--accent);margin-bottom:1.5rem;font-family:'DM Sans',sans-serif;">
-                Spring / Summer 2025 Collection
+                Spring 2026 Collection
             </div>
             <h1 style="font-family:'Playfair Display',serif;font-size:4rem;color:var(--cream);
                        line-height:1.05;margin:0 0 1.5rem;font-weight:900;">
-                Dressed for<br><em style="color:var(--accent-light);">Every Story</em>
+                Made with Luxury<br><em style="color:var(--accent-light);">Luxuriate Uour Life</em>
             </h1>
             <p style="color:#aaa;font-size:1.05rem;line-height:1.7;margin-bottom:2rem;
                       font-family:'DM Sans',sans-serif;max-width:440px;">
