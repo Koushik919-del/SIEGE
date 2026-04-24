@@ -316,10 +316,10 @@ def render_navbar():
                 font-family:'DM Sans',sans-serif;letter-spacing:0.05em;">
         <div style="font-family:'Playfair Display',serif;font-size:1.5rem;
                     color:var(--cream);font-weight:900;letter-spacing:0.04em;">
-            VOGUE<span style="color:var(--accent);">THREAD</span>
+            SIEGE<span style="color:var(--accent);">THREAD</span>
         </div>
         <div style="display:flex;gap:2rem;font-size:0.8rem;font-weight:500;text-transform:uppercase;color:#aaa;">
-            <span>Est. 2019</span>
+            <span>Est. 2025</span>
             <span>Free shipping over $200</span>
         </div>
         <div style="color:var(--accent-light);font-size:0.85rem;font-weight:500;">
