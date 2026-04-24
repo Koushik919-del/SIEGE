@@ -2,119 +2,123 @@ import streamlit as st
 
 # --- 1. PAGE CONFIGURATION ---
 st.set_page_config(
-    page_title="My Digital Hub", 
-    page_icon="🚀", 
-    layout="wide",
-    initial_sidebar_state="expanded"
+    page_title="StyleSync Clothing", 
+    page_icon="👕", 
+    layout="wide"
 )
 
-# --- 2. CUSTOM CSS (Visual Styling) ---
+# --- 2. CUSTOM CSS (Store Styling) ---
 st.markdown("""
     <style>
-    /* Main background color */
-    .stApp {
-        background-color: #f8f9fa;
+    .stApp { background-color: #ffffff; }
+    .product-card {
+        border: 1px solid #eee;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        background-color: #fafafa;
     }
-    /* Style the buttons */
     .stButton>button {
-        width: 100%;
-        border-radius: 8px;
-        height: 3em;
-        background-color: #007bff;
+        background-color: #111111;
         color: white;
-        font-weight: bold;
-        border: none;
+        border-radius: 20px;
     }
-    /* Style the metric cards */
-    [data-testid="stMetricValue"] {
-        font-size: 28px;
-        color: #007bff;
+    .stButton>button:hover {
+        background-color: #333333;
+        border: 1px solid #111111;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. SIDEBAR NAVIGATION ---
+# --- 3. SESSION STATE (Shopping Cart) ---
+if 'cart' not in st.session_state:
+    st.session_state.cart = 0
+
+# --- 4. SIDEBAR NAVIGATION ---
 with st.sidebar:
-    st.title("🌐 Menu")
-    page = st.radio("Navigate to:", ["Home", "Projects", "About Me", "Contact"])
+    st.title("🛍️ StyleSync")
+    page = st.radio("Browse", ["New Arrivals", "Collections", "Your Cart", "Track Order"])
     st.write("---")
-    st.caption("Freshman Dev | AI & Robotics")
+    st.metric("Items in Cart", st.session_state.cart)
+    if st.button("Clear Cart"):
+        st.session_state.cart = 0
+        st.rerun()
 
-# --- 4. PAGE: HOME ---
-if page == "Home":
-    st.title("Welcome to My Portfolio")
+# --- 5. PAGE: NEW ARRIVALS ---
+if page == "New Arrivals":
+    st.title("Spring 2026 Collection")
+    st.write("Fresh drops for the new season.")
     st.write("---")
-    
-    col1, col2 = st.columns([2, 1])
+
+    # Product Grid
+    col1, col2, col3 = st.columns(3)
+
     with col1:
-        st.header("The Mission")
-        st.write("""
-        I am a high school freshman and developer building the next generation 
-        of AI tools and hardware. My goal is to combine engineering and 
-        entrepreneurship to create a true 'Moonshot Factory.'
-        """)
-        st.success("Currently exploring: Robotics, AI Prototype V10, and Python Backend.")
-    
+        st.image("https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500", caption="Essential White Tee")
+        st.write("**$25.00**")
+        if st.button("Add to Cart", key="item1"):
+            st.session_state.cart += 1
+            st.toast("Added to cart!")
+
     with col2:
-        st.subheader("Current Focus")
-        st.metric(label="Academic Standing", value="4.0 GPA")
-        st.metric(label="Ongoing Projects", value="12")
+        st.image("https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500", caption="Midnight Leather Jacket")
+        st.write("**$120.00**")
+        if st.button("Add to Cart", key="item2"):
+            st.session_state.cart += 1
+            st.toast("Added to cart!")
 
-# --- 5. PAGE: PROJECTS ---
-elif page == "Projects":
-    st.title("🛠️ Project Portfolio")
+    with col3:
+        st.image("https://images.unsplash.com/photo-1542272604-787c3835535d?w=500", caption="Classic Slim Denim")
+        st.write("**$65.00**")
+        if st.button("Add to Cart", key="item3"):
+            st.session_state.cart += 1
+            st.toast("Added to cart!")
+
+# --- 6. PAGE: COLLECTIONS ---
+elif page == "Collections":
+    st.title("Explore Categories")
+    st.write("---")
+    cat_col1, cat_col2 = st.columns(2)
+    
+    with cat_col1:
+        st.header("Streetwear")
+        st.image("https://images.unsplash.com/photo-1552066344-24632e293122?w=800")
+        st.button("Shop Streetwear")
+
+    with cat_col2:
+        st.header("Formal")
+        st.image("https://images.unsplash.com/photo-1594932224828-b4b059bdbf6f?w=800")
+        st.button("Shop Formal")
+
+# --- 7. PAGE: YOUR CART ---
+elif page == "Your Cart":
+    st.title("Your Shopping Bag")
     st.write("---")
     
-    project_type = st.tabs(["Software (AI)", "Hardware", "Simulations"])
-    
-    with project_type[0]:
-        st.subheader("AI Software")
-        st.write("**Mr. Bunny AI:** A versatile assistant built with Python.")
-        st.write("**Nova AI:** A sophisticated chatbot logic system with over 10 versions.")
+    if st.session_state.cart == 0:
+        st.warning("Your cart is empty! Go grab some gear.")
+    else:
+        st.success(f"You have {st.session_state.cart} items ready for checkout.")
         
-    with project_type[1]:
-        st.subheader("Hardware & Engineering")
-        st.write("**Nova AI Glasses:** Wearable technology featuring facial recognition.")
-        st.info("Status: Prototyping V2")
-        
-    with project_type[2]:
-        st.subheader("Digital Worlds")
-        st.write("**United Empire of Koushik (UEK):** A complex geopolitical simulation in Minecraft.")
+        with st.expander("Order Summary"):
+            st.write(f"Subtotal: ${st.session_state.cart * 35}.00") # Sample average price
+            st.write("Shipping: FREE")
+            st.write(f"**Total: ${st.session_state.cart * 35}.00**")
+            
+        if st.button("Proceed to Checkout"):
+            st.balloons()
+            st.write("Redirecting to secure payment... (Simulated)")
 
-# --- 6. PAGE: ABOUT ME ---
-elif page == "About Me":
-    st.title("👤 About Me")
-    st.write("---")
-    
-    st.write("""
-    I’m a 14-year-old student passionate about the intersection of high-tech 
-    engineering and entrepreneurship. Whether it's coding a new AI version 
-    or building a Minecraft legal system, I'm always creating.
-    """)
-    
-    st.subheader("Clubs & Activities")
-    st.markdown("- **Robotics Club (FTC)**")
-    st.markdown("- **Programming Club**")
-    st.markdown("- **AVID Program**")
-    st.markdown("- **California Scholarship Federation**")
+# --- 8. PAGE: TRACK ORDER ---
+elif page == "Track Order":
+    st.title("Where is my stuff?")
+    order_id = st.text_input("Enter Order ID (e.g., #SS-12345)")
+    if st.button("Track"):
+        if order_id:
+            st.info(f"Order {order_id} is currently: **In Transit** (Arriving Monday)")
+        else:
+            st.error("Please enter a valid Order ID.")
 
-# --- 7. PAGE: CONTACT ---
-elif page == "Contact":
-    st.title("📩 Get in Touch")
-    st.write("---")
-    
-    with st.form("contact_form"):
-        name = st.text_input("Full Name")
-        email = st.text_input("Email Address")
-        message = st.text_area("Your Message")
-        submitted = st.form_submit_button("Send Details")
-        
-        if submitted:
-            if name and email and message:
-                st.success(f"Hello {name}! Your message has been received.")
-            else:
-                st.error("Please fill out all fields.")
-
-# --- 8. FOOTER ---
+# --- FOOTER ---
 st.write("---")
-st.caption("Built entirely in Python via Streamlit | Last Updated: April 2026")
+st.caption("© 2026 StyleSync Clothing | Powered by Python & Streamlit")
