@@ -316,7 +316,7 @@ def render_navbar():
                 font-family:'DM Sans',sans-serif;letter-spacing:0.05em;">
         <div style="font-family:'Playfair Display',serif;font-size:1.5rem;
                     color:var(--cream);font-weight:900;letter-spacing:0.04em;">
-            SIEGE<span style="color:var(--accent);">The Clothing Empire</span>
+            SIEGE<span style="color:var(--accent);"> The Clothing Empire</span>
         </div>
         <div style="display:flex;gap:2rem;font-size:0.8rem;font-weight:500;text-transform:uppercase;color:#aaa;">
             <span>Est. 2025</span>
