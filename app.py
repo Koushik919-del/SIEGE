@@ -2,7 +2,7 @@ import streamlit as st
 import threading
 import os
 
-# ── MrBunny proxy server (runs once in background) ────────────────────────────
+# -- MrBunny proxy server (runs once in background, calls OpenRouter) ----------
 def _start_bunny_proxy():
     try:
         from flask import Flask, request, jsonify
@@ -18,19 +18,43 @@ def _start_bunny_proxy():
                 r.headers["Access-Control-Allow-Headers"] = "Content-Type"
                 r.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
                 return r
-            api_key = os.environ.get("ANTHROPIC_API_KEY", "")
-            data = request.get_json()
+
+            api_key = os.environ.get("OPENROUTER_API_KEY", "")
+            body = request.get_json()
+
+            # Convert Anthropic-style payload to OpenRouter (OpenAI-compatible)
+            or_messages = []
+            if body.get("system"):
+                or_messages.append({"role": "system", "content": body["system"]})
+            or_messages.extend(body.get("messages", []))
+
+            or_payload = {
+                "model": "anthropic/claude-sonnet-4-5",
+                "max_tokens": body.get("max_tokens", 1000),
+                "messages": or_messages,
+            }
+
             upstream = _req.post(
-                "https://api.anthropic.com/v1/messages",
-                json=data,
+                "https://openrouter.ai/api/v1/chat/completions",
+                json=or_payload,
                 headers={
                     "Content-Type": "application/json",
-                    "x-api-key": api_key,
-                    "anthropic-version": "2023-06-01",
+                    "Authorization": f"Bearer {api_key}",
+                    "HTTP-Referer": "https://siege-clothing.streamlit.app",
+                    "X-Title": "SIEGE MrBunny",
                 },
                 timeout=30,
             )
-            resp = jsonify(upstream.json())
+            or_data = upstream.json()
+
+            # Convert OpenRouter response -> Anthropic-style for mrbunny.html
+            try:
+                text = or_data["choices"][0]["message"]["content"]
+                converted = {"content": [{"type": "text", "text": text}]}
+            except (KeyError, IndexError):
+                converted = or_data
+
+            resp = jsonify(converted)
             resp.headers["Access-Control-Allow-Origin"] = "*"
             return resp, upstream.status_code
 
