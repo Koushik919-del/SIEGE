@@ -316,10 +316,10 @@ def render_navbar():
                 font-family:'DM Sans',sans-serif;letter-spacing:0.05em;">
         <div style="font-family:'Playfair Display',serif;font-size:1.5rem;
                     color:var(--cream);font-weight:900;letter-spacing:0.04em;">
-            SIEGE<span style="color:var(--accent);"> The Clothing Empire</span>
+            VOGUE<span style="color:var(--accent);">THREAD</span>
         </div>
         <div style="display:flex;gap:2rem;font-size:0.8rem;font-weight:500;text-transform:uppercase;color:#aaa;">
-            <span>Est. 2025</span>
+            <span>Est. 2019</span>
             <span>Free shipping over $200</span>
         </div>
         <div style="color:var(--accent-light);font-size:0.85rem;font-weight:500;">
@@ -354,10 +354,10 @@ def product_card(product, col_key=""):
     if product.get("new"):
         new_badge = f'<span style="background:var(--accent);color:var(--charcoal);padding:2px 8px;font-size:0.7rem;font-weight:700;">NEW</span>'
 
-    price_html = f'<span style="font-size:1.1rem;font-weight:600;color:var(--charcoal);">${product["price"]:.2f}</span>'
+    price_html = f'<span style="font-size:1.1rem;font-weight:600;color:var(--charcoal);">£{product["price"]:.2f}</span>'
     if product.get("original_price"):
-        price_html = f'<span style="font-size:1.1rem;font-weight:600;color:var(--red);">${product["price"]:.2f}</span> ' \
-                     f'<span style="text-decoration:line-through;color:var(--warm-gray);font-size:0.9rem;">${product["original_price"]:.2f}</span>'
+        price_html = f'<span style="font-size:1.1rem;font-weight:600;color:var(--red);">£{product["price"]:.2f}</span> ' \
+                     f'<span style="text-decoration:line-through;color:var(--warm-gray);font-size:0.9rem;">£{product["original_price"]:.2f}</span>'
 
     wishlist_icon = "❤️" if product["id"] in st.session_state.wishlist else "🤍"
 
@@ -416,11 +416,11 @@ def page_home():
         <div style="max-width:600px;z-index:1;">
             <div style="font-size:0.8rem;letter-spacing:0.25em;text-transform:uppercase;
                         color:var(--accent);margin-bottom:1.5rem;font-family:'DM Sans',sans-serif;">
-                Spring 2026 Collection
+                Spring / Summer 2025 Collection
             </div>
             <h1 style="font-family:'Playfair Display',serif;font-size:4rem;color:var(--cream);
                        line-height:1.05;margin:0 0 1.5rem;font-weight:900;">
-                Made with Luxury<br><em style="color:var(--accent-light);">Luxuriate Your Life</em>
+                Dressed for<br><em style="color:var(--accent-light);">Every Story</em>
             </h1>
             <p style="color:#aaa;font-size:1.05rem;line-height:1.7;margin-bottom:2rem;
                       font-family:'DM Sans',sans-serif;max-width:440px;">
@@ -465,7 +465,7 @@ def page_home():
             <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#aaa;">Avg Rating</div>
         </div>
         <div>
-            <div style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--accent);">Many</div>
+            <div style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--accent);">2,400+</div>
             <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#aaa;">Reviews</div>
         </div>
         <div>
@@ -526,7 +526,7 @@ def page_home():
         <div style="flex:1;background:var(--card-bg);padding:2rem;text-align:center;">
             <div style="font-size:2rem;margin-bottom:0.5rem;">🚚</div>
             <div style="font-family:'Playfair Display',serif;font-weight:700;color:var(--charcoal);margin-bottom:0.3rem;">Free Shipping</div>
-            <div style="font-size:0.85rem;color:var(--warm-gray);">On orders over $200</div>
+            <div style="font-size:0.85rem;color:var(--warm-gray);">On orders over £200</div>
         </div>
         <div style="flex:1;background:var(--card-bg);padding:2rem;text-align:center;">
             <div style="font-size:2rem;margin-bottom:0.5rem;">↩️</div>
@@ -658,10 +658,10 @@ def page_product():
     with info_col:
         wishlist_icon = "❤️ In Wishlist" if product["id"] in st.session_state.wishlist else "🤍 Add to Wishlist"
 
-        price_html = f'<span style="font-size:2rem;font-weight:700;color:var(--charcoal);">${product["price"]:.2f}</span>'
+        price_html = f'<span style="font-size:2rem;font-weight:700;color:var(--charcoal);">£{product["price"]:.2f}</span>'
         if product.get("original_price"):
-            price_html = (f'<span style="font-size:2rem;font-weight:700;color:var(--red);">${product["price"]:.2f}</span> '
-                          f'<span style="text-decoration:line-through;color:var(--warm-gray);font-size:1.2rem;">${product["original_price"]:.2f}</span>')
+            price_html = (f'<span style="font-size:2rem;font-weight:700;color:var(--red);">£{product["price"]:.2f}</span> '
+                          f'<span style="text-decoration:line-through;color:var(--warm-gray);font-size:1.2rem;">£{product["original_price"]:.2f}</span>')
 
         st.markdown(f"""
         <div style="padding:1rem 0;">
@@ -710,7 +710,7 @@ def page_product():
         st.markdown("""
         <div style="margin-top:2rem;padding:1rem;background:var(--card-bg);border:1px solid var(--border);">
             <div style="font-size:0.8rem;color:var(--warm-gray);line-height:2;">
-                🚚 &nbsp;Free shipping on orders over $200<br>
+                🚚 &nbsp;Free shipping on orders over £200<br>
                 ↩️ &nbsp;Free 30-day returns<br>
                 🔒 &nbsp;Secure checkout<br>
                 🌿 &nbsp;Sustainably sourced materials
@@ -769,7 +769,7 @@ def page_cart():
                             Size: {item['size']} · Colour: {item['color']}
                         </div>
                         <div style="font-size:0.9rem;font-weight:600;color:var(--charcoal);margin-top:4px;">
-                            ${item['price']:.2f} × {item['qty']} = ${item['price'] * item['qty']:.2f}
+                            £{item['price']:.2f} × {item['qty']} = £{item['price'] * item['qty']:.2f}
                         </div>
                     </div>
                 </div>
@@ -805,20 +805,20 @@ def page_cart():
             </h3>
             <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;font-size:0.9rem;">
                 <span style="color:var(--warm-gray);">Subtotal</span>
-                <span style="font-weight:600;">${subtotal:.2f}</span>
+                <span style="font-weight:600;">£{subtotal:.2f}</span>
             </div>
             <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;font-size:0.9rem;">
                 <span style="color:var(--warm-gray);">Shipping</span>
                 <span style="font-weight:600;color:{'var(--accent)' if shipping == 0 else 'var(--charcoal)'}"">
-                    {'Free' if shipping == 0 else f'${shipping:.2f}'}
+                    {'Free' if shipping == 0 else f'£{shipping:.2f}'}
                 </span>
             </div>
-            {'<div style="font-size:0.75rem;color:var(--accent);margin-bottom:0.75rem;">✓ You qualify for free shipping!</div>' if shipping == 0 else f'<div style="font-size:0.75rem;color:var(--warm-gray);margin-bottom:0.75rem;">Add ${200 - subtotal:.2f} more for free shipping</div>'}
+            {'<div style="font-size:0.75rem;color:var(--accent);margin-bottom:0.75rem;">✓ You qualify for free shipping!</div>' if shipping == 0 else f'<div style="font-size:0.75rem;color:var(--warm-gray);margin-bottom:0.75rem;">Add £{200 - subtotal:.2f} more for free shipping</div>'}
             <hr style="border-color:var(--border);margin:0.75rem 0;">
             <div style="display:flex;justify-content:space-between;font-size:1.1rem;font-weight:700;
                         margin-bottom:1.5rem;">
                 <span>Total</span>
-                <span>${total:.2f}</span>
+                <span>£{total:.2f}</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -911,7 +911,7 @@ def page_checkout():
                 <div style="display:flex;justify-content:space-between;padding:0.5rem 0;
                             border-bottom:1px solid var(--border);font-size:0.9rem;">
                     <span>{item['emoji']} {item['name']} ({item['size']}, {item['color']}) × {item['qty']}</span>
-                    <span style="font-weight:600;">${item['price'] * item['qty']:.2f}</span>
+                    <span style="font-weight:600;">£{item['price'] * item['qty']:.2f}</span>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -934,15 +934,15 @@ def page_checkout():
         <div style="background:var(--card-bg);border:1px solid var(--border);padding:1.5rem;position:sticky;top:20px;">
             <h3 style="font-family:'Playfair Display',serif;color:var(--charcoal);margin:0 0 1rem;">Order Summary</h3>
             <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;font-size:0.88rem;">
-                <span style="color:var(--warm-gray);">Subtotal</span><span>${subtotal:.2f}</span>
+                <span style="color:var(--warm-gray);">Subtotal</span><span>£{subtotal:.2f}</span>
             </div>
             <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;font-size:0.88rem;">
                 <span style="color:var(--warm-gray);">Shipping</span>
-                <span>{'Free' if shipping == 0 else f'${shipping:.2f}'}</span>
+                <span>{'Free' if shipping == 0 else f'£{shipping:.2f}'}</span>
             </div>
             <hr style="border-color:var(--border);margin:0.75rem 0;">
             <div style="display:flex;justify-content:space-between;font-size:1.1rem;font-weight:700;">
-                <span>Total</span><span>${total:.2f}</span>
+                <span>Total</span><span>£{total:.2f}</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1008,7 +1008,7 @@ def page_about():
 
         <div style="background:var(--card-bg);border:1px solid var(--border);padding:3rem;margin-bottom:2rem;">
             <p style="font-size:1.1rem;line-height:1.9;color:var(--charcoal);margin:0;">
-                SIEGE: The Clothing Empire began with a simple conviction: beautiful clothes shouldn't cost the earth —
+                VOGUETHREAD began with a simple conviction: beautiful clothes shouldn't cost the earth —
                 financially or ecologically. Founded in East London in 2019 by two former fashion industry
                 insiders, we set out to prove that quality, sustainability, and accessible pricing could coexist
                 in a single wardrobe.
@@ -1081,10 +1081,10 @@ def page_contact():
             <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;
                         color:var(--charcoal);margin-bottom:1rem;">Other Ways to Reach Us</div>
             <div style="font-size:0.9rem;color:var(--warm-gray);line-height:2.2;">
-                📧 &nbsp;hello@SIEGE: The Clothing Empire.co.uk<br>
+                📧 &nbsp;hello@voguethread.co.uk<br>
                 📞 &nbsp;+44 20 1234 5678 (Mon–Fri, 9–5 GMT)<br>
                 📍 &nbsp;14 Curtain Road, London EC2A 3AT<br>
-                🐦 &nbsp;@SIEGE: The Clothing Empire
+                🐦 &nbsp;@voguethread
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1096,7 +1096,7 @@ def render_footer():
         <div style="display:flex;gap:4rem;margin-bottom:2rem;flex-wrap:wrap;">
             <div>
                 <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;
-                            color:var(--cream);margin-bottom:1rem;">SIEGE<span style="color:var(--accent);">The Clothing Empire</span></div>
+                            color:var(--cream);margin-bottom:1rem;">VOGUE<span style="color:var(--accent);">THREAD</span></div>
                 <div style="font-size:0.85rem;color:#666;max-width:220px;line-height:1.7;">
                     Thoughtfully made clothing.<br>Responsibly sourced. London-based.
                 </div>
@@ -1125,7 +1125,7 @@ def render_footer():
         </div>
         <hr style="border-color:#333;margin:1.5rem 0;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
-            <div style="font-size:0.75rem;color:#555;">© 2025 SIEGE: The Clothing Empire. All rights reserved.</div>
+            <div style="font-size:0.75rem;color:#555;">© 2025 VOGUETHREAD. All rights reserved.</div>
             <div style="font-size:0.75rem;color:#555;">Privacy Policy · Terms of Service · Cookie Policy</div>
         </div>
     </div>
@@ -1156,5 +1156,20 @@ elif page == "contact":
     page_contact()
 else:
     page_home()
+
+
+# ── MrBunny AI Chat Widget (injected into parent window) ───────────────────────
+import streamlit.components.v1 as _components
+
+
+# ── MrBunny AI Chat Widget ─────────────────────────────────────────────────────
+import streamlit.components.v1 as _components
+import os as _os
+
+_bunny_path = _os.path.join(_os.path.dirname(__file__), "mrbunny.html")
+with open(_bunny_path, "r", encoding="utf-8") as _f:
+    _bunny_html = _f.read()
+
+_components.html(_bunny_html, height=0, scrolling=False)
 
 render_footer()
