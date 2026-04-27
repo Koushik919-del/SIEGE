@@ -384,7 +384,7 @@ def render_navbar():
                 font-family:'DM Sans',sans-serif;letter-spacing:0.05em;">
         <div style="font-family:'Playfair Display',serif;font-size:1.5rem;
                     color:var(--cream);font-weight:900;letter-spacing:0.04em;">
-            VOGUE<span style="color:var(--accent);">THREAD</span>
+            SIEGE<span style="color:var(--accent);">THREAD</span>
         </div>
         <div style="display:flex;gap:2rem;font-size:0.8rem;font-weight:500;text-transform:uppercase;color:#aaa;">
             <span>Est. 2019</span>
@@ -1076,7 +1076,7 @@ def page_about():
 
         <div style="background:var(--card-bg);border:1px solid var(--border);padding:3rem;margin-bottom:2rem;">
             <p style="font-size:1.1rem;line-height:1.9;color:var(--charcoal);margin:0;">
-                VOGUETHREAD began with a simple conviction: beautiful clothes shouldn't cost the earth —
+                SIEGETHREAD began with a simple conviction: beautiful clothes shouldn't cost the earth —
                 financially or ecologically. Founded in East London in 2019 by two former fashion industry
                 insiders, we set out to prove that quality, sustainability, and accessible pricing could coexist
                 in a single wardrobe.
@@ -1149,10 +1149,10 @@ def page_contact():
             <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;
                         color:var(--charcoal);margin-bottom:1rem;">Other Ways to Reach Us</div>
             <div style="font-size:0.9rem;color:var(--warm-gray);line-height:2.2;">
-                📧 &nbsp;hello@voguethread.co.uk<br>
+                📧 &nbsp;hello@SIEGEthread.co.uk<br>
                 📞 &nbsp;+44 20 1234 5678 (Mon–Fri, 9–5 GMT)<br>
                 📍 &nbsp;14 Curtain Road, London EC2A 3AT<br>
-                🐦 &nbsp;@voguethread
+                🐦 &nbsp;@SIEGEthread
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1164,7 +1164,7 @@ def render_footer():
         <div style="display:flex;gap:4rem;margin-bottom:2rem;flex-wrap:wrap;">
             <div>
                 <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;
-                            color:var(--cream);margin-bottom:1rem;">VOGUE<span style="color:var(--accent);">THREAD</span></div>
+                            color:var(--cream);margin-bottom:1rem;">SIEGE<span style="color:var(--accent);">THREAD</span></div>
                 <div style="font-size:0.85rem;color:#666;max-width:220px;line-height:1.7;">
                     Thoughtfully made clothing.<br>Responsibly sourced. London-based.
                 </div>
@@ -1193,7 +1193,7 @@ def render_footer():
         </div>
         <hr style="border-color:#333;margin:1.5rem 0;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
-            <div style="font-size:0.75rem;color:#555;">© 2025 VOGUETHREAD. All rights reserved.</div>
+            <div style="font-size:0.75rem;color:#555;">© 2025 SIEGETHREAD. All rights reserved.</div>
             <div style="font-size:0.75rem;color:#555;">Privacy Policy · Terms of Service · Cookie Policy</div>
         </div>
     </div>
