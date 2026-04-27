@@ -10,6 +10,10 @@
   var doc = window.parent.document;
   if (doc.getElementById('mrbunny-fab')) return;
 
+  // --- CONFIGURATION ---
+  var OPENROUTER_KEY = "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"; 
+  // ---------------------
+
   var CATALOGUE = [
     "- Ivory Linen Blazer (Women, Outerwear) - $189.00 [NEW]",
     "- The Cashmere Crew (Women, Tops) - $145.00",
@@ -95,24 +99,45 @@
     else if(!on&&t){t.remove();}
   }
 
-  /* Proxy URL: same hostname as Streamlit, port 7539 */
-  var PROXY = window.parent.location.protocol + '//' + window.parent.location.hostname + ':7539/mrbunny';
-
   async function send() {
     var text = inp.value.trim(); if(!text) return;
     inp.value=''; inp.disabled=true; btn.disabled=true;
-    mkBubble('user', text); hist.push({role:'user',content:text}); setTyping(true);
+    mkBubble('user', text); 
+    
+    // Convert history for OpenRouter format
+    var messages = [{role: 'system', content: SYS}];
+    hist.forEach(h => messages.push({role: h.role, content: h.content}));
+    messages.push({role: 'user', content: text});
+    
+    setTyping(true);
+
     try {
-      var res = await fetch(PROXY, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({model:'openai/gpt-oss-120b:free',max_tokens:1000,system:SYS,messages:hist})
+      var res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + OPENROUTER_KEY,
+          'HTTP-Referer': window.location.href, // Optional for OpenRouter
+          'X-Title': 'MrBunny' // Optional for OpenRouter
+        },
+        body: JSON.stringify({
+          model: 'openai/gpt-oss-120b:free',
+          messages: messages
+        })
       });
-      var data = await res.json(); setTyping(false);
-      var reply = (data.content&&data.content[0]) ? data.content[0].text : 'Something went wrong \uD83D\uDC30 Try again!';
-      mkBubble('assistant', reply); hist.push({role:'assistant',content:reply});
+      
+      var data = await res.json();
+      setTyping(false);
+      
+      var reply = (data.choices && data.choices[0]) ? data.choices[0].message.content : 'Something went wrong \uD83D\uDC30 Try again!';
+      
+      mkBubble('assistant', reply);
+      hist.push({role: 'user', content: text});
+      hist.push({role: 'assistant', content: reply});
     } catch(e) {
       setTyping(false);
-      mkBubble('assistant', 'Could not reach MrBunny \uD83D\uDC30 Make sure OPENROUTER_API_KEY is set in your Streamlit secrets and try again.');
+      mkBubble('assistant', 'Error: Could not reach OpenRouter. Check your key and connection. \uD83D\uDC30');
+      console.error(e);
     }
     inp.disabled=false; btn.disabled=false; inp.focus();
   }
