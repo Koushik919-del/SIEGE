@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: transparent; overflow: hidden; }
+</style>
+</head>
+<body>
+<script>
+(function() {
+  var doc = window.parent.document;
+  if (doc.getElementById('mrbunny-fab')) return;
+
+  var CATALOGUE = [
+    "- Ivory Linen Blazer (Women, Outerwear) - $189.00 [NEW]",
+    "- The Cashmere Crew (Women, Tops) - $145.00",
+    "- Wide Leg Silk Trousers (Women, Bottoms) - $225.00 [ON SALE]",
+    "- Cotton Poplin Shirt Dress (Women, Dresses) - $165.00 [NEW]",
+    "- Merino Ribbed Cardigan (Women, Tops) - $135.00 [ON SALE]",
+    "- Leather Mini Skirt (Women, Bottoms) - $195.00 [NEW]",
+    "- Japanese Selvedge Jeans (Men, Bottoms) - $210.00",
+    "- Oxford Button-Down Shirt (Men, Tops) - $120.00",
+    "- Italian Wool Overcoat (Men, Outerwear) - $395.00 [ON SALE]",
+    "- Relaxed Chino (Men, Bottoms) - $135.00",
+    "- Supima Tee 3-Pack (Men, Tops) - $89.00",
+    "- Linen Resort Shirt (Men, Tops) - $115.00 [NEW]",
+    "- Pebbled Leather Tote (Accessories, Bags) - $245.00",
+    "- Wool Felt Fedora (Accessories, Hats) - $95.00 [NEW]",
+    "- Silk Scarf 90x90 (Accessories, Scarves) - $125.00 [ON SALE]",
+    "- Leather Chelsea Boots (Accessories, Shoes) - $325.00"
+  ].join("\n");
+
+  var SYS = "You are MrBunny, a charming AI fashion assistant for SIEGE: The Clothing Empire. Help customers with styling advice, sizing, and product recommendations. Be warm, witty, and concise (2-4 sentences max). Use a bunny emoji occasionally. Only refer to products from this list, never invent new ones:\n\n" + CATALOGUE + "\n\nSizing runs true to size. Free shipping over $200. Free 30-day returns.";
+
+  /* ── Styles ── */
+  var st = doc.createElement('style');
+  st.textContent =
+    '#mrbunny-fab{position:fixed;bottom:24px;right:24px;width:54px;height:54px;background:#0d0d0d;border-radius:50%;border:2px solid #2a2a2a;font-size:1.45rem;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:999999;transition:transform .15s;user-select:none;}' +
+    '#mrbunny-fab:hover{transform:scale(1.1);}' +
+    '#mrbunny-panel{position:fixed;bottom:90px;right:24px;width:320px;height:430px;background:#0d0d0d;border:1px solid #222;border-radius:6px;box-shadow:0 10px 44px rgba(0,0,0,.9);z-index:999998;display:none;flex-direction:column;overflow:hidden;font-family:"DM Sans","Segoe UI",sans-serif;}' +
+    '#mrbunny-panel.bopen{display:flex;}' +
+    '#bhdr{background:#111;padding:12px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #1a1a1a;flex-shrink:0;}' +
+    '#bav{width:32px;height:32px;background:#1a1a1a;border-radius:50%;border:1px solid #2e2e2e;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}' +
+    '#bhtx{flex:1;}' +
+    '#btitle{color:#f0f0f0;font-weight:700;font-size:.88rem;}' +
+    '#bsub{color:#444;font-size:.65rem;margin-top:1px;}' +
+    '#bdot{width:7px;height:7px;background:#3ecf8e;border-radius:50%;}' +
+    '#bmsgs{flex:1;overflow-y:auto;padding:12px 10px;display:flex;flex-direction:column;gap:8px;background:#0d0d0d;}' +
+    '#bmsgs::-webkit-scrollbar{width:3px;}' +
+    '#bmsgs::-webkit-scrollbar-thumb{background:#222;border-radius:2px;}' +
+    '.bwb{display:flex;flex-direction:column;align-items:flex-start;}' +
+    '.bwu{display:flex;flex-direction:column;align-items:flex-end;}' +
+    '.blb{font-size:.6rem;color:#333;margin-bottom:2px;}' +
+    '.blu{font-size:.6rem;color:#7a6020;margin-bottom:2px;}' +
+    '.bbot{background:#161616;color:#ccc;border:1px solid #1f1f1f;border-radius:2px 10px 10px 10px;padding:8px 11px;font-size:.8rem;line-height:1.55;max-width:93%;}' +
+    '.busr{background:#C4973B;color:#0d0d0d;border-radius:10px 2px 10px 10px;padding:8px 11px;font-size:.8rem;line-height:1.55;max-width:93%;font-weight:600;}' +
+    '.btyp{color:#333;font-size:.75rem;font-style:italic;padding:2px;}' +
+    '#bbar{display:flex;border-top:1px solid #1a1a1a;background:#111;flex-shrink:0;}' +
+    '#binp{flex:1;background:transparent;border:none;outline:none;color:#ddd;font-size:.82rem;padding:11px 12px;font-family:inherit;}' +
+    '#binp::placeholder{color:#333;}' +
+    '#bbtn{background:#C4973B;border:none;color:#0d0d0d;font-weight:700;font-size:.9rem;padding:0 16px;cursor:pointer;transition:background .15s;}' +
+    '#bbtn:hover{background:#d4a84b;}' +
+    '#bbtn:disabled{background:#222;color:#444;cursor:not-allowed;}';
+  doc.head.appendChild(st);
+
+  /* ── FAB button ── */
+  var fab = doc.createElement('div');
+  fab.id = 'mrbunny-fab';
+  fab.textContent = '\uD83D\uDC30'; // bunny emoji
+  doc.body.appendChild(fab);
+
+  /* ── Chat panel ── */
+  var panel = doc.createElement('div');
+  panel.id = 'mrbunny-panel';
+
+  var hdr = doc.createElement('div'); hdr.id = 'bhdr';
+  hdr.innerHTML =
+    '<div id="bav">\uD83D\uDC30</div>' +
+    '<div id="bhtx"><div id="btitle">MrBunny AI</div><div id="bsub">SIEGE Style Assistant</div></div>' +
+    '<div id="bdot"></div>';
+
+  var msgs = doc.createElement('div'); msgs.id = 'bmsgs';
+  var welcome = doc.createElement('div'); welcome.className = 'bwb';
+  welcome.innerHTML =
+    '<div class="blb">MrBunny</div>' +
+    '<div class="bbot">Hey! \uD83D\uDC30 I\'m MrBunny, your SIEGE style assistant. Ask me anything \u2014 sizing, styling tips, what\'s new, or help finding the perfect piece!</div>';
+  msgs.appendChild(welcome);
+
+  var bar = doc.createElement('div'); bar.id = 'bbar';
+  var inp = doc.createElement('input');
+  inp.id = 'binp'; inp.type = 'text'; inp.placeholder = 'Ask MrBunny anything\u2026';
+  var btn = doc.createElement('button');
+  btn.id = 'bbtn'; btn.textContent = '\u27A4';
+  bar.appendChild(inp); bar.appendChild(btn);
+
+  panel.appendChild(hdr);
+  panel.appendChild(msgs);
+  panel.appendChild(bar);
+  doc.body.appendChild(panel);
+
+  /* ── Toggle ── */
+  fab.addEventListener('click', function() {
+    panel.classList.toggle('bopen');
+    if (panel.classList.contains('bopen')) inp.focus();
+  });
+
+  /* ── Chat logic ── */
+  var hist = [];
+
+  function scrollBot() { msgs.scrollTop = msgs.scrollHeight; }
+
+  function mkBubble(role, text) {
+    var w = doc.createElement('div');
+    w.className = role === 'user' ? 'bwu' : 'bwb';
+    var l = doc.createElement('div');
+    l.className = role === 'user' ? 'blu' : 'blb';
+    l.textContent = role === 'user' ? 'You' : 'MrBunny';
+    var b = doc.createElement('div');
+    b.className = role === 'user' ? 'busr' : 'bbot';
+    b.textContent = text;
+    w.appendChild(l);
+    w.appendChild(b);
+    msgs.appendChild(w);
+    scrollBot();
+  }
+
+  function setTyping(on) {
+    var t = doc.getElementById('btyp');
+    if (on && !t) {
+      var e = doc.createElement('div');
+      e.id = 'btyp'; e.className = 'btyp';
+      e.textContent = 'MrBunny is thinking\u2026';
+      msgs.appendChild(e);
+      scrollBot();
+    } else if (!on && t) {
+      t.remove();
+    }
+  }
+
+  async function send() {
+    var text = inp.value.trim();
+    if (!text) return;
+    inp.value = '';
+    inp.disabled = true;
+    btn.disabled = true;
+    mkBubble('user', text);
+    hist.push({ role: 'user', content: text });
+    setTyping(true);
+    try {
+      var res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: SYS,
+          messages: hist
+        })
+      });
+      var data = await res.json();
+      setTyping(false);
+      var reply = (data.content && data.content[0]) ? data.content[0].text : 'Something went wrong \uD83D\uDC30 Try again!';
+      mkBubble('assistant', reply);
+      hist.push({ role: 'assistant', content: reply });
+    } catch(e) {
+      setTyping(false);
+      mkBubble('assistant', 'Oops, tripped over my fluffy feet! \uD83D\uDC30 Check your connection and try again.');
+    }
+    inp.disabled = false;
+    btn.disabled = false;
+    inp.focus();
+  }
+
+  btn.addEventListener('click', send);
+  inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') send(); });
+
+})();
+</script>
+</body>
+</html>
