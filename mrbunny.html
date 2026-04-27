@@ -105,14 +105,14 @@
     try {
       var res = await fetch(PROXY, {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:hist})
+        body: JSON.stringify({model:'openai/gpt-oss-120b:free',max_tokens:1000,system:SYS,messages:hist})
       });
       var data = await res.json(); setTyping(false);
       var reply = (data.content&&data.content[0]) ? data.content[0].text : 'Something went wrong \uD83D\uDC30 Try again!';
       mkBubble('assistant', reply); hist.push({role:'assistant',content:reply});
     } catch(e) {
       setTyping(false);
-      mkBubble('assistant', 'Could not reach MrBunny \uD83D\uDC30 Make sure ANTHROPIC_API_KEY is set in your Streamlit secrets and try again.');
+      mkBubble('assistant', 'Could not reach MrBunny \uD83D\uDC30 Make sure OPENROUTER_API_KEY is set in your Streamlit secrets and try again.');
     }
     inp.disabled=false; btn.disabled=false; inp.focus();
   }
