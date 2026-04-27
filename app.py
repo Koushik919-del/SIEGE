@@ -1158,294 +1158,138 @@ else:
     page_home()
 
 
-# ── MrBunny AI Chat Widget (self-contained iframe) ────────────────────────────
+# ── MrBunny AI Chat Widget (injected into parent window) ───────────────────────
 import streamlit.components.v1 as _components
 
-_product_list = "\n".join(
-    f"- {p['name']} ({p['category']}, {p['subcategory']}) — ${p['price']:.2f}"
-    + (" [ON SALE]" if p.get("sale") else "")
-    + (" [NEW]" if p.get("new") else "")
-    for p in PRODUCTS
-)
 
-_BUNNY_HTML = """
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: transparent; font-family: 'DM Sans', sans-serif; overflow: hidden; }
+# ── MrBunny AI Chat Widget (injected into parent window) ───────────────────────
+import streamlit.components.v1 as _components
 
-  /* FAB */
-  #fab {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 56px;
-    height: 56px;
-    background: #0d0d0d;
-    border-radius: 50%;
-    border: 2px solid #333;
-    font-size: 1.5rem;
-    cursor: pointer;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    transition: transform 0.15s, box-shadow 0.15s;
-    user-select: none;
-  }
-  #fab:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(0,0,0,0.75); }
+_product_lines = []
+for p in PRODUCTS:
+    line = f"- {p['name']} ({p['category']}, {p['subcategory']}) - ${p['price']:.2f}"
+    if p.get("sale"): line += " [ON SALE]"
+    if p.get("new"):  line += " [NEW]"
+    _product_lines.append(line)
+_catalogue = "\\n".join(_product_lines)
 
-  /* Panel */
-  #panel {
-    position: fixed;
-    bottom: 92px;
-    right: 24px;
-    width: 320px;
-    height: 420px;
-    background: #0d0d0d;
-    border: 1px solid #1f1f1f;
-    border-radius: 6px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.85);
-    display: none;
-    flex-direction: column;
-    z-index: 9998;
-    overflow: hidden;
-  }
-  #panel.open { display: flex; }
+_js_template = """<script>
+(function() {
+  var doc = window.parent.document;
+  if (doc.getElementById('mrbunny-fab')) return;
 
-  /* Header */
-  #header {
-    background: #111;
-    padding: 12px 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-bottom: 1px solid #1e1e1e;
-    flex-shrink: 0;
-  }
-  #avatar {
-    width: 32px; height: 32px;
-    background: #1a1a1a;
-    border-radius: 50%;
-    border: 1px solid #2e2e2e;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1rem;
-  }
-  #htext { flex: 1; }
-  #htitle { color: #f0f0f0; font-weight: 700; font-size: 0.88rem; }
-  #hsub   { color: #444; font-size: 0.65rem; margin-top: 1px; }
-  #hdot   { width: 7px; height: 7px; background: #3ecf8e; border-radius: 50%; }
+  var CATALOGUE = "%%CATALOGUE%%";
+  var SYS = "You are MrBunny, a charming AI fashion assistant for SIEGE: The Clothing Empire. Help customers with styling, sizing, and product recommendations. Be warm, witty, 2-4 sentences max. Use a bunny emoji occasionally. Only mention products from this catalogue, never invent new ones:\\n\\n" + CATALOGUE + "\\n\\nSizing runs true to size. Free shipping over $200. Free 30-day returns.";
 
-  /* Messages */
-  #messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 12px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    background: #0d0d0d;
-  }
-  #messages::-webkit-scrollbar { width: 3px; }
-  #messages::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
+  var st = doc.createElement('style');
+  st.textContent =
+    '#mrbunny-fab{position:fixed;bottom:24px;right:24px;width:54px;height:54px;background:#0d0d0d;border-radius:50%;border:2px solid #2a2a2a;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:999999;transition:transform .15s;user-select:none;}' +
+    '#mrbunny-fab:hover{transform:scale(1.1);}' +
+    '#mrbunny-panel{position:fixed;bottom:90px;right:24px;width:320px;height:430px;background:#0d0d0d;border:1px solid #222;border-radius:6px;box-shadow:0 10px 44px rgba(0,0,0,.9);z-index:999998;display:none;flex-direction:column;overflow:hidden;font-family:"DM Sans","Segoe UI",sans-serif;}' +
+    '#mrbunny-panel.bopen{display:flex;}' +
+    '#bhdr{background:#111;padding:12px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #1a1a1a;flex-shrink:0;}' +
+    '#bav{width:32px;height:32px;background:#1a1a1a;border-radius:50%;border:1px solid #2e2e2e;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}' +
+    '#bhtx{flex:1;}#btitle{color:#f0f0f0;font-weight:700;font-size:.88rem;}#bsub{color:#444;font-size:.65rem;margin-top:1px;}' +
+    '#bdot{width:7px;height:7px;background:#3ecf8e;border-radius:50%;}' +
+    '#bmsgs{flex:1;overflow-y:auto;padding:12px 10px;display:flex;flex-direction:column;gap:8px;}' +
+    '#bmsgs::-webkit-scrollbar{width:3px;}#bmsgs::-webkit-scrollbar-thumb{background:#222;border-radius:2px;}' +
+    '.bwb{display:flex;flex-direction:column;align-items:flex-start;}.bwu{display:flex;flex-direction:column;align-items:flex-end;}' +
+    '.blb{font-size:.6rem;color:#333;margin-bottom:2px;}.blu{font-size:.6rem;color:#7a6020;margin-bottom:2px;}' +
+    '.bbot{background:#161616;color:#ccc;border:1px solid #1f1f1f;border-radius:2px 10px 10px 10px;padding:8px 11px;font-size:.8rem;line-height:1.55;max-width:93%;}' +
+    '.busr{background:#C4973B;color:#0d0d0d;border-radius:10px 2px 10px 10px;padding:8px 11px;font-size:.8rem;line-height:1.55;max-width:93%;font-weight:600;}' +
+    '.btyp{color:#333;font-size:.75rem;font-style:italic;padding:2px;}' +
+    '#bbar{display:flex;border-top:1px solid #1a1a1a;background:#111;flex-shrink:0;}' +
+    '#binp{flex:1;background:transparent;border:none;outline:none;color:#ddd;font-size:.82rem;padding:11px 12px;font-family:inherit;}' +
+    '#binp::placeholder{color:#333;}' +
+    '#bbtn{background:#C4973B;border:none;color:#0d0d0d;font-weight:700;font-size:.9rem;padding:0 16px;cursor:pointer;transition:background .15s;}' +
+    '#bbtn:hover{background:#d4a84b;}#bbtn:disabled{background:#222;color:#444;cursor:not-allowed;}';
+  doc.head.appendChild(st);
 
-  .msg-wrap-bot  { display:flex; flex-direction:column; align-items:flex-start; }
-  .msg-wrap-user { display:flex; flex-direction:column; align-items:flex-end; }
-  .lbl { font-size: 0.6rem; color: #333; margin-bottom: 2px; }
-  .lbl-user { color: #7a6020; }
+  var fab = doc.createElement('div');
+  fab.id = 'mrbunny-fab';
+  fab.innerHTML = '&#x1F430;';
+  doc.body.appendChild(fab);
 
-  .bubble-bot {
-    background: #161616;
-    color: #ccc;
-    border: 1px solid #1f1f1f;
-    border-radius: 2px 10px 10px 10px;
-    padding: 8px 11px;
-    font-size: 0.8rem;
-    line-height: 1.55;
-    max-width: 92%;
-  }
-  .bubble-user {
-    background: #C4973B;
-    color: #0d0d0d;
-    border-radius: 10px 2px 10px 10px;
-    padding: 8px 11px;
-    font-size: 0.8rem;
-    line-height: 1.55;
-    max-width: 92%;
-    font-weight: 600;
-  }
-  .typing {
-    color: #3a3a3a;
-    font-size: 0.75rem;
-    font-style: italic;
-    padding: 4px 2px;
+  var panel = doc.createElement('div');
+  panel.id = 'mrbunny-panel';
+  panel.innerHTML =
+    '<div id="bhdr"><div id="bav">&#x1F430;</div><div id="bhtx"><div id="btitle">MrBunny AI</div><div id="bsub">SIEGE Style Assistant</div></div><div id="bdot"></div></div>' +
+    '<div id="bmsgs"><div class="bwb"><div class="blb">MrBunny</div><div class="bbot">Hey! &#x1F430; I\'m MrBunny, your SIEGE style assistant. Ask me anything &#x2014; sizing, styling, what\'s on sale, or help finding the perfect piece!</div></div></div>' +
+    '<div id="bbar"><input id="binp" type="text" placeholder="Ask MrBunny anything\u2026"><button id="bbtn">\u27A4</button></div>';
+  doc.body.appendChild(panel);
+
+  fab.addEventListener('click', function() {
+    panel.classList.toggle('bopen');
+    if (panel.classList.contains('bopen')) doc.getElementById('binp').focus();
+  });
+
+  var hist = [];
+
+  function scrollBot() {
+    var m = doc.getElementById('bmsgs');
+    m.scrollTop = m.scrollHeight;
   }
 
-  /* Input bar */
-  #inputbar {
-    display: flex;
-    border-top: 1px solid #1a1a1a;
-    background: #111;
-    flex-shrink: 0;
-  }
-  #inputbar input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #ddd;
-    font-size: 0.82rem;
-    padding: 11px 12px;
-    font-family: inherit;
-  }
-  #inputbar input::placeholder { color: #3a3a3a; }
-  #sendbtn {
-    background: #C4973B;
-    border: none;
-    color: #0d0d0d;
-    font-weight: 700;
-    font-size: 0.85rem;
-    padding: 0 16px;
-    cursor: pointer;
-    transition: background 0.15s;
-    flex-shrink: 0;
-  }
-  #sendbtn:hover { background: #d4a84b; }
-  #sendbtn:disabled { background: #333; color: #555; cursor: not-allowed; }
-</style>
-</head>
-<body>
-
-<div id="fab" onclick="togglePanel()">🐰</div>
-
-<div id="panel">
-  <div id="header">
-    <div id="avatar">🐰</div>
-    <div id="htext">
-      <div id="htitle">MrBunny AI</div>
-      <div id="hsub">SIEGE Style Assistant</div>
-    </div>
-    <div id="hdot"></div>
-  </div>
-  <div id="messages">
-    <div class="msg-wrap-bot">
-      <div class="lbl">MrBunny</div>
-      <div class="bubble-bot">Hey! 🐰 I'm MrBunny, your SIEGE style assistant. Ask me anything — sizing, styling tips, what's new, or help finding the perfect piece!</div>
-    </div>
-  </div>
-  <div id="inputbar">
-    <input id="inp" type="text" placeholder="Ask MrBunny anything…" onkeydown="if(event.key==='Enter')send()">
-    <button id="sendbtn" onclick="send()">➤</button>
-  </div>
-</div>
-
-<script>
-const SYSTEM = `You are MrBunny 🐰, a charming AI fashion assistant for SIEGE: The Clothing Empire.
-Help with styling advice, sizing, product recommendations, and fashion guidance.
-Be warm, witty, concise (2-4 sentences). Use a bunny emoji occasionally.
-Only refer to products in this catalogue, never invent new ones:
-
-CATALOGUE_PLACEHOLDER
-
-Sizing: all pieces run true to size. Free shipping over $200. Free 30-day returns.`;
-
-const history = [];
-
-function togglePanel() {
-  const p = document.getElementById('panel');
-  p.classList.toggle('open');
-  if (p.classList.contains('open')) {
-    document.getElementById('inp').focus();
-  }
-}
-
-function scrollBottom() {
-  const m = document.getElementById('messages');
-  m.scrollTop = m.scrollHeight;
-}
-
-function addBubble(role, text) {
-  const m = document.getElementById('messages');
-  const wrap = document.createElement('div');
-  wrap.className = role === 'user' ? 'msg-wrap-user' : 'msg-wrap-bot';
-  const lbl = document.createElement('div');
-  lbl.className = role === 'user' ? 'lbl lbl-user' : 'lbl';
-  lbl.textContent = role === 'user' ? 'You' : 'MrBunny';
-  const bubble = document.createElement('div');
-  bubble.className = role === 'user' ? 'bubble-user' : 'bubble-bot';
-  bubble.textContent = text;
-  wrap.appendChild(lbl);
-  wrap.appendChild(bubble);
-  m.appendChild(wrap);
-  scrollBottom();
-  return bubble;
-}
-
-function addTyping() {
-  const m = document.getElementById('messages');
-  const el = document.createElement('div');
-  el.className = 'typing';
-  el.id = 'typing';
-  el.textContent = 'MrBunny is thinking…';
-  m.appendChild(el);
-  scrollBottom();
-}
-
-function removeTyping() {
-  const el = document.getElementById('typing');
-  if (el) el.remove();
-}
-
-async function send() {
-  const inp = document.getElementById('inp');
-  const btn = document.getElementById('sendbtn');
-  const text = inp.value.trim();
-  if (!text) return;
-  inp.value = '';
-  inp.disabled = true;
-  btn.disabled = true;
-
-  addBubble('user', text);
-  history.push({ role: 'user', content: text });
-  addTyping();
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: SYSTEM,
-        messages: history
-      })
-    });
-    const data = await res.json();
-    removeTyping();
-    const reply = data.content && data.content[0] ? data.content[0].text : 'Something went wrong 🐰 Try again!';
-    addBubble('assistant', reply);
-    history.push({ role: 'assistant', content: reply });
-  } catch(e) {
-    removeTyping();
-    addBubble('assistant', 'Oops, I tripped over my fluffy feet! 🐰 Check your connection and try again.');
+  function mkBubble(role, text) {
+    var m = doc.getElementById('bmsgs');
+    var w = doc.createElement('div'); w.className = role==='user' ? 'bwu' : 'bwb';
+    var l = doc.createElement('div'); l.className = role==='user' ? 'blu' : 'blb';
+    l.textContent = role==='user' ? 'You' : 'MrBunny';
+    var b = doc.createElement('div'); b.className = role==='user' ? 'busr' : 'bbot';
+    b.textContent = text;
+    w.appendChild(l); w.appendChild(b); m.appendChild(w); scrollBot();
   }
 
-  inp.disabled = false;
-  btn.disabled = false;
-  inp.focus();
-}
-</script>
-</body>
-</html>
-"""
+  function setTyping(on) {
+    var t = doc.getElementById('btyp');
+    if (on && !t) {
+      var m = doc.getElementById('bmsgs');
+      var e = doc.createElement('div'); e.id='btyp'; e.className='btyp';
+      e.textContent = 'MrBunny is thinking\u2026';
+      m.appendChild(e); scrollBot();
+    } else if (!on && t) { t.remove(); }
+  }
 
-# Inject the product catalogue into the JS system prompt
-_BUNNY_HTML = _BUNNY_HTML.replace("CATALOGUE_PLACEHOLDER", _product_list)
+  async function send() {
+    var inp = doc.getElementById('binp');
+    var btn = doc.getElementById('bbtn');
+    var txt = inp.value.trim();
+    if (!txt) return;
+    inp.value = ''; inp.disabled = true; btn.disabled = true;
+    mkBubble('user', txt);
+    hist.push({role:'user', content:txt});
+    setTyping(true);
+    try {
+      var r = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: SYS,
+          messages: hist
+        })
+      });
+      var d = await r.json();
+      setTyping(false);
+      var rep = (d.content && d.content[0]) ? d.content[0].text : 'Something went wrong \uD83D\uDC30 Try again!';
+      mkBubble('assistant', rep);
+      hist.push({role:'assistant', content:rep});
+    } catch(e) {
+      setTyping(false);
+      mkBubble('assistant', 'Oops, tripped over my fluffy feet! \uD83D\uDC30 Check your connection and try again.');
+    }
+    inp.disabled = false; btn.disabled = false; inp.focus();
+  }
 
-_components.html(_BUNNY_HTML, height=520, scrolling=False)
+  doc.getElementById('bbtn').addEventListener('click', send);
+  doc.getElementById('binp').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') send();
+  });
+})();
+</script>"""
+
+_js_final = _js_template.replace("%%CATALOGUE%%", _catalogue.replace('"', '\\"').replace('\n', '\\n'))
+_components.html(_js_final, height=0, scrolling=False)
 
 render_footer()
