@@ -1,4 +1,48 @@
 import streamlit as st
+import threading
+import os
+
+# ── MrBunny proxy server (runs once in background) ────────────────────────────
+def _start_bunny_proxy():
+    try:
+        from flask import Flask, request, jsonify
+        import requests as _req
+
+        _flask_app = Flask(__name__)
+
+        @_flask_app.route("/mrbunny", methods=["POST", "OPTIONS"])
+        def _proxy():
+            if request.method == "OPTIONS":
+                r = _flask_app.make_response("")
+                r.headers["Access-Control-Allow-Origin"] = "*"
+                r.headers["Access-Control-Allow-Headers"] = "Content-Type"
+                r.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+                return r
+            api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+            data = request.get_json()
+            upstream = _req.post(
+                "https://api.anthropic.com/v1/messages",
+                json=data,
+                headers={
+                    "Content-Type": "application/json",
+                    "x-api-key": api_key,
+                    "anthropic-version": "2023-06-01",
+                },
+                timeout=30,
+            )
+            resp = jsonify(upstream.json())
+            resp.headers["Access-Control-Allow-Origin"] = "*"
+            return resp, upstream.status_code
+
+        _flask_app.run(host="127.0.0.1", port=7539, debug=False, use_reloader=False)
+    except Exception:
+        pass
+
+if "bunny_proxy_started" not in st.session_state:
+    st.session_state.bunny_proxy_started = True
+    _t = threading.Thread(target=_start_bunny_proxy, daemon=True)
+    _t.start()
+
 
 # ── Page config ────────────────────────────────────────────────────────────────
 st.set_page_config(
