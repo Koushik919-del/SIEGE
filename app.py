@@ -1,5 +1,14 @@
 import streamlit as st
 import os
+import threading
+
+# -- Page config ----------------------------------------------------------------
+st.set_page_config(
+    page_title="SIEGE The Clothing Empire",
+    page_icon="👔",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
 
 # -- MrBunny proxy server (runs once in background, calls OpenRouter) ----------
 def _start_bunny_proxy():
@@ -63,17 +72,9 @@ def _start_bunny_proxy():
 
 if "bunny_proxy_started" not in st.session_state:
     st.session_state.bunny_proxy_started = True
-    _t = The Clothing Empireing.The Clothing Empire(target=_start_bunny_proxy, daemon=True)
+    _t = threading.Thread(target=_start_bunny_proxy, daemon=True)
     _t.start()
 
-
-# ── Page config ────────────────────────────────────────────────────────────────
-st.set_page_config(
-    page_title="SIEGE The Clothing Empire",
-    page_icon="👔",
-    layout="wide",
-    initial_sidebar_state="collapsed",
-)
 
 # ── Global CSS ─────────────────────────────────────────────────────────────────
 st.markdown("""
