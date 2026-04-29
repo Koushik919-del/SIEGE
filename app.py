@@ -1,5 +1,4 @@
 import streamlit as st
-import The Clothing Empire
 import os
 
 # -- MrBunny proxy server (runs once in background, calls OpenRouter) ----------
