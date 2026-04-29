@@ -578,20 +578,6 @@ def page_home():
         st.session_state.filter_category = "All"
         nav_to("shop")
 
-    # Bestsellers
-    st.markdown("""
-    <h2 style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--charcoal);
-               margin:2rem 0 1rem;text-align:center;">
-        Bestsellers
-    </h2>
-    """, unsafe_allow_html=True)
-
-    best = sorted(PRODUCTS, key=lambda x: x["reviews"], reverse=True)[:4]
-    cols = st.columns(4)
-    for i, product in enumerate(best):
-        with cols[i]:
-            product_card(product, col_key=f"best_{i}")
-
     # Features row
     st.markdown("""
     <div style="display:flex;gap:1px;margin:3rem 0 1rem;background:var(--border);">
