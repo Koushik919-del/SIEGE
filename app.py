@@ -1,6 +1,7 @@
 import streamlit as st
 import os
 import threading
+from textwrap import dedent
 
 # -- Page config ----------------------------------------------------------------
 st.set_page_config(
@@ -429,31 +430,34 @@ def product_card(product, col_key=""):
 
     wishlist_icon = "❤️" if product["id"] in st.session_state.wishlist else "🤍"
 
-    st.markdown(f"""
-    <div style="background:var(--card-bg);border:1px solid var(--border);
-                padding:0;transition:box-shadow 0.2s;cursor:pointer;
-                box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-        <div style="background:linear-gradient(135deg, #f0ebe0, #e8e0d0);
-                    height:220px;display:flex;align-items:center;
-                    justify-content:center;font-size:5rem;position:relative;">
-            {product['emoji']}
-            <div style="position:absolute;top:10px;left:10px;display:flex;gap:6px;">
-                {sale_badge}{new_badge}
+    st.markdown(
+        dedent(f"""
+        <div style="background:var(--card-bg);border:1px solid var(--border);
+                    padding:0;transition:box-shadow 0.2s;cursor:pointer;
+                    box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+            <div style="background:linear-gradient(135deg, #f0ebe0, #e8e0d0);
+                        height:220px;display:flex;align-items:center;
+                        justify-content:center;font-size:5rem;position:relative;">
+                {product['emoji']}
+                <div style="position:absolute;top:10px;left:10px;display:flex;gap:6px;">
+                    {sale_badge}{new_badge}
+                </div>
+                <div style="position:absolute;top:10px;right:10px;font-size:1.2rem;">{wishlist_icon}</div>
             </div>
-            <div style="position:absolute;top:10px;right:10px;font-size:1.2rem;">{wishlist_icon}</div>
-        </div>
-        <div style="padding:1rem;">
-            <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;
-                        color:var(--warm-gray);margin-bottom:4px;">{product['subcategory']}</div>
-            <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;
-                        color:var(--charcoal);margin-bottom:6px;">{product['name']}</div>
-            <div style="font-size:0.8rem;color:var(--accent);margin-bottom:8px;">
-                {star_display(product['rating'])} <span style="color:var(--warm-gray);">({product['reviews']})</span>
+            <div style="padding:1rem;">
+                <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;
+                            color:var(--warm-gray);margin-bottom:4px;">{product['subcategory']}</div>
+                <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;
+                            color:var(--charcoal);margin-bottom:6px;">{product['name']}</div>
+                <div style="font-size:0.8rem;color:var(--accent);margin-bottom:8px;">
+                    {star_display(product['rating'])} <span style="color:var(--warm-gray);">({product['reviews']})</span>
+                </div>
+                <div style="margin-bottom:10px;">{price_html}</div>
             </div>
-            <div style="margin-bottom:10px;">{price_html}</div>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """).strip(),
+        unsafe_allow_html=True,
+    )
 
     c1, c2 = st.columns(2)
     with c1:
